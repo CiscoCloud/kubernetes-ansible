@@ -1,0 +1,84 @@
+---
+# default is etc/utc in build 20141129 [http://cloud.centos.org/centos/7/images/]
+- name: set timezone to etc/utc
+  sudo: yes
+  file:
+    src: /usr/share/zoneinfo/Etc/UTC
+    dest: /etc/localtime
+    state: link
+    force: yes
+
+# add hosts to /etc/hosts
+- name: configure hosts file
+  sudo: yes
+  lineinfile:
+    dest: /etc/hosts
+    regexp: "^{{ hostvars[item].ansible_default_ipv4.address }} {{ item }}{% if use_host_domain %} {{ item }}.{{ host_domain }}{% endif %}$"
+    line: "{{ hostvars[item].ansible_default_ipv4.address }} {{ item }}{% if use_host_domain %} {{ item }}.{{ host_domain}}{% endif %}"
+    state: present
+  when: hostvars[item].ansible_default_ipv4.address is defined
+  with_items: groups['all']
+
+- name: install system utilities
+  sudo: yes
+  yum:
+    name: httpd-tools
+    state: latest
+  with_items:
+    - httpd-tools
+    - nc
+    - openssh
+  tags:
+    - bootstrap
+
+- name: disable firewalld
+  sudo: yes
+  service:
+    name: firewalld
+    enabled: false
+    state: stopped
+
+- name: enable EPEL repo
+  sudo: yes
+  yum:
+    name: epel-release
+    state: latest
+
+- name: bootstrap virt7-testing repository
+  copy: src=virt7-testing.repo
+        dest=/etc/yum.repos.d/
+        owner=root group=root mode=0644
+
+- name: enable virt7-testing repo
+  ini_file: dest=/etc/yum.repos.d/virt7-testing.repo
+            section=virt7-testing
+            option=enabled
+            value=1
+
+- name: install pip
+  sudo: yes
+  yum:
+    name: python-pip
+    state: latest
+
+- name: update setuptools and pip
+  sudo: yes
+  pip:
+    name: "{{ item.name }}"
+    state: latest
+  with_items:
+    - name: pip
+    - name: setuptools
+
+- name: install iptables
+  sudo: yes
+  yum:
+    name: iptables-services
+    state: latest
+
+- name: Set IP address variables
+  set_fact:
+    master_ip_address: "{{ hostvars[groups['role=control'][0]]['ansible_default_ipv4']['address'] }}"
+    etcd_ip_address: "{{ hostvars[groups['role=control'][0]]['ansible_default_ipv4']['address'] }}"
+
+- include: users.yml

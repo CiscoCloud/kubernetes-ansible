@@ -1,0 +1,19 @@
+---
+- hosts: all
+  sudo: yes
+  roles:
+          - common
+
+- hosts: role=control
+  sudo: yes
+  roles:
+          - etcd
+          - kubernetes
+          - master
+          - skydns
+
+- hosts: role=worker
+  sudo: yes
+  roles:
+          - kubernetes
+          - minion

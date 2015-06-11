@@ -1,0 +1,13 @@
+---
+- hosts: role=control
+  sudo: yes
+  roles:
+        - flannel-config
+
+- hosts:
+        - role=control
+        - role=worker
+  sudo: yes
+  roles:
+        - common
+        - flannel
