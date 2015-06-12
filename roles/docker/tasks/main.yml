@@ -5,16 +5,12 @@
   yum:
     name: device-mapper-libs
     state: latest
-  tags:
-    - docker
 
 - name: install docker
   sudo: yes
   yum:
     name: docker
-    state: present
-  tags:
-    - docker
+    state: latest
 
 - name: configure docker consul dns
   sudo: yes
@@ -25,8 +21,6 @@
     state: present
   notify:
     - restart docker
-  tags:
-    - docker
 
 - name: enable docker
   sudo: yes
@@ -34,5 +28,3 @@
     name: docker
     enabled: yes
     state: started
-  tags:
-    - docker

@@ -1,7 +1,7 @@
 # Flanneld configuration options  
 
 # etcd url location.  Point this to the server where etcd runs
-FLANNEL_ETCD="http://{{ groups['etcd'][0] }}:4001"
+FLANNEL_ETCD="http://{{ groups['role=control'][0] }}:4001"
 
 # etcd config key.  This is the configuration key that flannel queries
 # For address range assignment

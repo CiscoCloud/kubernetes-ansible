@@ -1,4 +1,19 @@
 ---
+- name: create flannel config json
+  sudo: yes
+  template:
+    src: 'flannel.json.j2'
+    dest: /tmp/flannel.json
+
+- name: configure flannel in etcd
+  run_once: true
+  sudo: yes
+  command: 'curl -X PUT -d@/tmp/flannel.json -H "Content-Type: application/json" http://127.0.0.1:4001/v2/keys/coreos.com/network/config'
+  changed_when: false
+
+- name: delete flannel config json
+  file: name=/tmp/flannel_config.json state=absent
+
 - name: Install flannel
   yum: name=flannel state=latest
 
@@ -13,4 +28,5 @@
           - stop docker
           - delete docker0
           - start docker
-          - restart kubelet
+
+- include: iptables.yml
