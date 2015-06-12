@@ -4,12 +4,15 @@
   register: iptablesrules
   always_run: yes
 
-- name: Enable iptables at boot
-  service: name=iptables enabled=yes state=started
-
 - name: Open etcd client port with iptables
   command: /sbin/iptables -I INPUT 1 -p tcp --dport 4001 -j ACCEPT -m comment --comment "etcd_client"
   when: iptablesrules.stdout.find("etcd_client") == -1
+  notify:
+          - restart iptables
+
+- name: Open etcd peer port with iptables
+  command: /sbin/iptables -I INPUT 1 -p tcp --dport 2380 -j ACCEPT -m comment --comment "etcd_peer"
+  when: iptablesrules.stdout.find("etcd_peer") == -1
   notify:
           - restart iptables
 
