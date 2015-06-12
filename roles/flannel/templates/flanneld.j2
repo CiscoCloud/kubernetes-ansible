@@ -8,5 +8,5 @@ FLANNEL_ETCD="http://{{ groups['etcd'][0] }}:4001"
 FLANNEL_ETCD_KEY="/coreos.com/network"
 
 # Any additional options that you want to pass
-#FLANNEL_OPTIONS=""
+FLANNEL_OPTIONS="-iface=eth0"
 

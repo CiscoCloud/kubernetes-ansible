@@ -8,6 +8,8 @@
   sudo: yes
   roles:
           - etcd
+          - flannel-config
+          - flannel
           - kubernetes
           - master
           - skydns
@@ -15,5 +17,7 @@
 - hosts: role=worker
   sudo: yes
   roles:
+          - flannel
+          - docker
           - kubernetes
           - minion
