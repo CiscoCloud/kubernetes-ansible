@@ -1,0 +1,11 @@
+[Service]
+Environment=ETCD_NAME={{ ansible_hostname }}
+Environment=ETCD_DATA_DIR="/var/lib/etcd/{{ ansible_hostname }}.etcd"
+Environment=ETCD_LISTEN_PEER_URLS=http://0.0.0.0:7001
+Environment=ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:4001
+Environment=ETCD_ADVERTISE_CLIENT_URLS=http://{{ ansible_hostname }}:4001
+Environment=ETCD_INITIAL_ADVERTISE_PEER_URLS=http://{{ ansible_hostname }}:7001
+Environment=ETCD_INITIAL_CLUSTER={% for host in groups[master_group_name] %}{{ hostvars[host]['ansible_hostname'] }}=http://{{ hostvars[host]['ansible_default_ipv4']['address'] }}:7001,{% endfor %}
+
+Environment=ETCD_INITIAL_CLUSTER_STATE=new
+Environment=ETCD_INITIAL_CLUSTER_TOKEN="etcd-cluster"

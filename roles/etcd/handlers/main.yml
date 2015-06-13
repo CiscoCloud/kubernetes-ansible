@@ -1,6 +1,13 @@
 ---
-- name: restart etcd
-  service: name=etcd state=restarted
+- name: Reload systemd
+  sudo: yes
+  shell: systemctl daemon-reload
+  when: etcd_peers.changed
+
+- name: Restart etcd
+  sudo: yes
+  service: name={{etcd_service}} state=restarted
+  when: etcd_peers.changed
 
 - name: restart iptables
   service: name=iptables state=restarted
