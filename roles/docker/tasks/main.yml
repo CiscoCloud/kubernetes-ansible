@@ -1,5 +1,4 @@
 ---
-# Workaround for https://github.com/CiscoCloud/microservices-infrastructure/issues/161 
 - name: install latest device-mapper-libs
   sudo: yes
   yum:
@@ -11,16 +10,7 @@
   yum:
     name: docker
     state: latest
-
-- name: configure docker consul dns
-  sudo: yes
-  lineinfile:
-    dest: /etc/sysconfig/docker-network
-    regexp: ^DOCKER_NETWORK_OPTIONS
-    line: DOCKER_NETWORK_OPTIONS='--dns {{ ansible_default_ipv4.address }} --dns-search service.{{ consul_dns_domain }}'
-    state: present
-  notify:
-    - restart docker
+    enablerepo: virt7-testing
 
 - name: enable docker
   sudo: yes
