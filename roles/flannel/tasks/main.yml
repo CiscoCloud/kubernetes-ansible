@@ -14,29 +14,29 @@
 - name: delete flannel config json
   file: name=/tmp/flannel.json state=absent
 
-- name: Install flannel
+- name: install flannel
   yum: name=flannel state=latest
 
-- name: Install Flannel config file
+- name: install flannel sysconfig file
   template: src=flanneld.j2 dest=/etc/sysconfig/flanneld
   notify:
           - restart flannel
 
-- name: configure docker network
+- name: configure docker network options
   sudo: yes
   lineinfile:
     dest: /etc/sysconfig/docker-network
     regexp: ^DOCKER_NETWORK_OPTIONS
-    line: DOCKER_NETWORK_OPTIONS='--bip=${FLANNEL_SUBNET} --mtu=${FLANNEL_MTU} --dns {{ dns_server }} --dns-search {{ dns_domain }}'
+    line: DOCKER_NETWORK_OPTIONS='--dns {{ dns_server }} --dns-search {{ dns_domain }}'
     state: present
   notify:
           - restart docker
 
-- name: Launch Flannel
+- name: launch flannel
   service: name=flanneld state=started enabled=yes
   notify:
           - stop docker
           - delete docker0
           - start docker
 
-#- include: iptables.yml
+- include: iptables.yml
