@@ -1,5 +1,5 @@
 {
-    "Network": "{{ flannel_network }}/16",
+    "Network": "{{ kube_overlay_ip }}/16",
     "SubnetLen": 24,
     "Backend": {"Type": "vxlan"},
 }

@@ -8,11 +8,11 @@
 - name: configure flannel in etcd
   run_once: true
   sudo: yes
-  command: 'curl -X PUT -d@/tmp/flannel.json -H "Content-Type: application/json" http://127.0.0.1:4001/v2/keys/coreos.com/network/config'
+  command: 'curl -L http://{{ etcd_ip_address }}:4001/v2/keys/coreos.com/network/config -XPUT --data-urlencode value@/tmp/flannel.json'
   changed_when: false
 
 - name: delete flannel config json
-  file: name=/tmp/flannel_config.json state=absent
+  file: name=/tmp/flannel.json state=absent
 
 - name: Install flannel
   yum: name=flannel state=latest
@@ -22,6 +22,16 @@
   notify:
           - restart flannel
 
+- name: configure docker network
+  sudo: yes
+  lineinfile:
+    dest: /etc/sysconfig/docker-network
+    regexp: ^DOCKER_NETWORK_OPTIONS
+    line: DOCKER_NETWORK_OPTIONS='--bip=${FLANNEL_SUBNET} --mtu=${FLANNEL_MTU} --dns {{ dns_server }} --dns-search {{ dns_domain }}'
+    state: present
+  notify:
+          - restart docker
+
 - name: Launch Flannel
   service: name=flanneld state=started enabled=yes
   notify:
@@ -29,4 +39,4 @@
           - delete docker0
           - start docker
 
-- include: iptables.yml
+#- include: iptables.yml
