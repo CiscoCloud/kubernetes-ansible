@@ -14,5 +14,3 @@
 
 - name: Enable proxy
   service: name=kube-proxy enabled=yes state=started
-
-#- include: iptables.yml

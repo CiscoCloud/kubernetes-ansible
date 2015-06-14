@@ -23,4 +23,3 @@
   sudo: yes
   service: name={{etcd_service}} enabled=yes state=started
 
-#- include: iptables.yml

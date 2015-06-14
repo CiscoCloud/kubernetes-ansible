@@ -31,7 +31,4 @@
   service: name=kube-scheduler enabled=yes state=started
 
 - include: load_nodes.yml
-  when: kube_node_via_api
   tags: load_nodes
-
-#- include: iptables.yml
