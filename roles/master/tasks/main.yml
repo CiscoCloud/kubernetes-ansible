@@ -24,6 +24,10 @@
   notify:
           - restart scheduler
 
+- name: create kubernetes env dir
+  file: path=/var/run/kubernetes state=directory mode=0755 owner=kube group=kube
+  sudo: yes
+
 - name: Enable apiserver
   service: name=kube-apiserver enabled=yes state=started
 

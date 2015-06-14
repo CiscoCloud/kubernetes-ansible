@@ -4,4 +4,4 @@
 # default config should be adequate
 
 # Add your own!
-KUBE_PROXY_ARGS="--master=http://{{ groups['role=control'][0] }}:8080"
+KUBE_PROXY_ARGS="--master=http://{{ groups[master_group_name][0] }}:8080"

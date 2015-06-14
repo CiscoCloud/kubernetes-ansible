@@ -1,15 +1,12 @@
-# Account name of remote user. Ansible will use this user account to ssh into
-# the managed machines. The user must be able to use sudo without asking
-# for password.
+# ansible remote user account
 ansible_ssh_user: centos
 
-# Etcd role params
+# ansible groups for service configuration
+etcd_group_name: role=control
 master_group_name: role=control
+minion_group_name: role=worker
 
-# Kubernetes internal network for services.
-# Kubernetes services will get fake IP addresses from this range.
-# This range must not conflict with anything in your infrastructure. These
-# addresses do not need to be routable and must just be an unused block of space.
+# Kubernetes internal network for services, unused block of space.
 kube_service_addresses: 10.254.0.0/16
 
 # Flannel internal network (optional). When flannel is used, it will assign IP
@@ -34,7 +31,7 @@ dns_setup: true
 # This domain must not be used in your network. Services will be discoverable
 # under <service-name>.<namespace>.<domainname>, e.g.
 # myservice.default.kube.local
-dns_domain: kube.local
+dns_domain: cluster.local
 
 # Number of replicas of DNS instances started on kubernetes
 dns_replicas: 1
@@ -45,4 +42,4 @@ dns_replicas: 1
 # the range specified as kube_service_addresses above.
 # And this is the IP address you should use as address of the DNS server
 # in your containers.
-dns_server: 10.254.0.10
+dns_server: 10.254.0.253

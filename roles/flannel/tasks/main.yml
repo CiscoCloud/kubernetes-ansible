@@ -8,7 +8,7 @@
 - name: configure flannel in etcd
   run_once: true
   sudo: yes
-  command: 'curl -L http://{{ etcd_ip_address }}:4001/v2/keys/coreos.com/network/config -XPUT --data-urlencode value@/tmp/flannel.json'
+  command: 'curl -L http://{{ groups[master_group_name][0] }}:4001/v2/keys/coreos.com/network/config -XPUT --data-urlencode value@/tmp/flannel.json'
   changed_when: false
 
 - name: delete flannel config json
@@ -24,13 +24,12 @@
 
 - name: configure docker network options
   sudo: yes
+  when: dns_setup|bool
   lineinfile:
     dest: /etc/sysconfig/docker-network
     regexp: ^DOCKER_NETWORK_OPTIONS
     line: DOCKER_NETWORK_OPTIONS='--dns {{ dns_server }} --dns-search {{ dns_domain }}'
     state: present
-  notify:
-          - restart docker
 
 - name: launch flannel
   service: name=flanneld state=started enabled=yes

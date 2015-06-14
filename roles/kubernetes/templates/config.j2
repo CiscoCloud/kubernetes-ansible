@@ -11,7 +11,7 @@
 #   kube-proxy.service
 
 # Comma separated list of nodes in the etcd cluster
-# KUBE_ETCD_SERVERS="--etcd_servers=http://127.0.0.1:4001"
+KUBE_ETCD_SERVERS="--etcd_servers=http://{{ groups[etcd_group_name][0] }}:4001"
 
 # logging to stderr means we get it in the systemd journal
 KUBE_LOGTOSTDERR="--logtostderr=true"
@@ -23,4 +23,4 @@ KUBE_LOG_LEVEL="--v=0"
 KUBE_ALLOW_PRIV="--allow_privileged=true"
 
 # How the replication controller, scheduler, and proxy
-KUBE_MASTER="--master=http://{{ master_ip_address }}:8080"
+KUBE_MASTER="--master=http://{{ groups[master_group_name][0] }}:8080"

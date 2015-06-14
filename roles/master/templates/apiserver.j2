@@ -17,7 +17,7 @@ KUBE_API_ADDRESS="--address=0.0.0.0"
 KUBE_SERVICE_ADDRESSES="--portal_net={{ kube_service_addresses }}"
 
 # Location of the etcd cluster
-KUBE_ETCD_SERVERS="--etcd_servers=http://{{ etcd_ip_address }}:4001"
+KUBE_ETCD_SERVERS="--etcd_servers=http://{{ groups[etcd_group_name][0] }}:4001"
 
 # Add you own!
 KUBE_API_ARGS=""

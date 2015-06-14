@@ -3,6 +3,7 @@
   shell: iptables -L -t nat
   register: iptablesrules
   always_run: yes
+  changed_when: false
 
 - name: enable kernel packet forwarding
   sysctl: name="net.ipv4.ip_forward" value=1 sysctl_set=yes state=present reload=yes

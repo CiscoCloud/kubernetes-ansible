@@ -9,7 +9,7 @@
 
 
 - name: Check that the DNS pod exists
-  shell: kubectl get rc kube-dns
+  shell: kubectl get rc kube-dns-v3
   register: has_dns_pod
   failed_when: false
   changed_when: false

@@ -11,7 +11,7 @@ KUBELET_ADDRESS="--address=0.0.0.0"
 KUBELET_HOSTNAME="--hostname_override={{ inventory_hostname }}"
 
 # location of the api-server
-KUBELET_API_SERVER="--api_servers=http://{{ master_ip_address }}:8080"
+KUBELET_API_SERVER="--api_servers=http://{{ groups[master_group_name][0] }}:8080"
 
 
 

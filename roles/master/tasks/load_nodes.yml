@@ -3,7 +3,7 @@
   template: src=node-v1beta3.j2 dest=/tmp/node-{{ item }}.json
   changed_when: false
   with_items:
-    groups['role=worker']
+    groups[minion_group_name]
 
 - name: Load minion definition into masters
   command: /usr/bin/kubectl create -f /tmp/node-{{ item }}.json
@@ -11,10 +11,10 @@
   failed_when: "'already exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "command_result.rc == 0"
   with_items:
-    groups['role=worker']
+    groups[minion_group_name]
 
 - name: Delete minion definitions from masters
   file: path=/tmp/node-{{ item }}.json state=absent
   changed_when: false
   with_items:
-    groups['role=worker']
+    groups[minion_group_name]
