@@ -6,18 +6,11 @@
           - restart controller-manager
           - restart scheduler
 
-- name: write the new style config file for controller-manager
+- name: write config file for controller-manager
   template: src=controller-manager.j2 dest=/etc/kubernetes/controller-manager
-  when: kube_node_via_api
   notify:
           - restart controller-manager
   tags: load_nodes
-
-- name: write the old style config file for controller-manager
-  template: src=controller-manager-old.j2 dest=/etc/kubernetes/controller-manager
-  when: not kube_node_via_api
-  notify:
-          - restart controller-manager
 
 - name: write the config file for scheduler
   copy: src=scheduler dest=/etc/kubernetes/scheduler
