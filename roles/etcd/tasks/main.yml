@@ -28,7 +28,7 @@
   sudo: yes
   template:
     src: 10-peers.conf.j2
-    dest: "{{ etcd_service_dir }}"/10-peers.conf
+    dest: "{{ etcd_service_dir }}/10-peers.conf"
   register: etcd_peers
   notify:
     - Reload systemd
