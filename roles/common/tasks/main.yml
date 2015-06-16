@@ -40,10 +40,3 @@
     mode: 0644
   tags:
     - common
-
-- name: Set IP address variables
-  set_fact:
-    master_ip_address: "{{ hostvars[groups[master_group_name][0]]['ansible_default_ipv4']['address'] }}"
-    etcd_ip_address: "{{ hostvars[groups[master_group_name][0]]['ansible_default_ipv4']['address'] }}"
-  tags:
-    - common
