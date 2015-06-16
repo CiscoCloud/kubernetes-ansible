@@ -4,6 +4,8 @@
   yum:
     name: device-mapper-libs
     state: latest
+  tags:
+    - docker
 
 - name: install docker
   sudo: yes
@@ -11,6 +13,8 @@
     name: docker
     state: latest
     enablerepo: virt7-testing
+  tags:
+    - docker
 
 - name: enable docker
   sudo: yes
@@ -18,3 +22,5 @@
     name: docker
     enabled: yes
     state: started
+  tags:
+    - docker

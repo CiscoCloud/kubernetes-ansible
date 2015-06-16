@@ -2,20 +2,20 @@
 - hosts: all
   sudo: yes
   roles:
-          - common
+    - common
 
 - hosts: role=control
   sudo: yes
   roles:
-          - etcd
-          - kubernetes
-          - master
-          - skydns
+    - etcd
+    - kubernetes
+    - master
+    - skydns
 
 - hosts: role=worker
   sudo: yes
   roles:
-          - docker
-          - flannel
-          - kubernetes
-          - minion
+    - docker
+    - flannel
+    - kubernetes
+    - minion

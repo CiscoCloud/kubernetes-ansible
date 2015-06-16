@@ -4,23 +4,39 @@
   template:
     src: 'flannel.json.j2'
     dest: /tmp/flannel.json
+  tags:
+    - flannel
 
 - name: configure flannel in etcd
   run_once: true
   sudo: yes
   command: 'curl -L http://{{ groups[etcd_group_name][0] }}:4001/v2/keys/coreos.com/network/config -XPUT --data-urlencode value@/tmp/flannel.json'
   changed_when: false
+  tags:
+    - flannel
 
 - name: delete flannel config json
-  file: name=/tmp/flannel.json state=absent
+  file:
+    name: /tmp/flannel.json
+    state: absent
+  tags:
+    - flannel
 
 - name: install flannel
-  yum: name=flannel state=latest
+  yum:
+    name: flannel
+    state: latest
+  tags:
+    - flannel
 
 - name: install flannel sysconfig file
-  template: src=flanneld.j2 dest=/etc/sysconfig/flanneld
+  template:
+    src: flanneld.j2
+    dest: /etc/sysconfig/flanneld
   notify:
-          - restart flannel
+    - restart flannel
+  tags:
+    - flannel
 
 - name: configure docker network options
   sudo: yes
@@ -30,12 +46,19 @@
     regexp: ^DOCKER_NETWORK_OPTIONS
     line: DOCKER_NETWORK_OPTIONS='--dns {{ dns_server }} --dns-search {{ dns_domain }}'
     state: present
+  tags:
+    - flannel
 
 - name: launch flannel
-  service: name=flanneld state=started enabled=yes
+  service:
+    name: flanneld
+    state: started
+    enabled: yes
   notify:
-          - stop docker
-          - delete docker0
-          - start docker
+    - stop docker
+    - delete docker0
+    - start docker
+  tags:
+    - flannel
 
 - include: iptables.yml
