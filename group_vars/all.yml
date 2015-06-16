@@ -12,9 +12,7 @@ kube_service_addresses: 10.254.0.0/16
 # Flannel internal network (optional). When flannel is used, it will assign IP
 # addresses from this range to individual pods.
 # This network must be unused in your network infrastructure!
-kube_overlay_ip: 4.0.0.0
-# Prefix length of kube_overlay_ip range.
-kube_overlay_prefix: 16
+kube_overlay_network: 4.0.0.0/16
 
 # Internal DNS configuration.
 # Kubernetes can create and mainatain its own DNS server to resolve service names
