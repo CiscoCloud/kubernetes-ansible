@@ -1,3 +1,2 @@
 ---
-etcd_service: "etcd.service"
-etcd_service_dir: "/etc/systemd/system/{{etcd_service}}.d"
+etcd_service_dir: "/etc/systemd/system/etcd.service.d"

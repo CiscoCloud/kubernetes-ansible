@@ -2,7 +2,7 @@
 - name: create flannel config json
   sudo: yes
   template:
-    src: 'flannel.json.j2'
+    src: flannel.json.j2
     dest: /tmp/flannel.json
   tags:
     - flannel

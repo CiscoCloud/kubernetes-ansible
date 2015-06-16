@@ -31,15 +31,15 @@
     dest: "{{ etcd_service_dir }}/10-peers.conf"
   register: etcd_peers
   notify:
-    - Reload systemd
-    - Restart etcd
+    - reload systemd
+    - restart etcd
   tags:
     - etcd
 
 - name: Enable and start etcd service
   sudo: yes
   service:
-     name: "{{ etcd_service }}"
+     name: etcd
      enabled: yes
      state: started
   tags:
