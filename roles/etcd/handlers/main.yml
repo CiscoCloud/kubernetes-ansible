@@ -1,13 +1,13 @@
 ---
-- name: Reload systemd
+- name: reload systemd
   sudo: yes
   shell: systemctl daemon-reload
   when: etcd_peers.changed
 
-- name: Restart etcd
+- name: restart etcd
   sudo: yes
   service:
-    name: "{{ etcd_service }}"
+    name: etcd
     state: restarted
   when: etcd_peers.changed
 
