@@ -9,9 +9,8 @@
 
 - name: enable kernel packet forwarding
   sysctl:
-    name: "net.ipv4.ip_forward"
+    name: net.ipv4.ip_forward
     value: 1
-    sysctl_set: yes
     state: present
     reload: yes
   tags:
