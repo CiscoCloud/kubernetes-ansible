@@ -6,6 +6,8 @@
     state: latest
   notify:
     - restart daemons
+  tags:
+    - kubernetes
 
 - name: write the global config file
   template:
@@ -13,3 +15,5 @@
     dest: /etc/kubernetes/config
   notify:
     - restart daemons
+  tags:
+    - kubernetes

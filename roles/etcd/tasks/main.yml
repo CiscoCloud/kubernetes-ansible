@@ -4,12 +4,16 @@
   yum:
     pkg: etcd
     state: latest
+  tags:
+    - etcd
 
 - name: Reset default config file
   sudo: yes
   file:
     path: /etc/etcd/etcd.conf
     state: absent
+  tags:
+    - etcd
 
 - name: Create service directory
   sudo: yes
@@ -17,6 +21,8 @@
     path: "{{ etcd_service_dir }}"
     state: directory
     mode: 0755
+  tags:
+    - etcd
 
 - name: Create peers config file
   sudo: yes
@@ -27,6 +33,8 @@
   notify:
     - Reload systemd
     - Restart etcd
+  tags:
+    - etcd
 
 - name: Enable and start etcd service
   sudo: yes
@@ -34,3 +42,5 @@
      name: "{{ etcd_service }}"
      enabled: yes
      state: started
+  tags:
+    - etcd

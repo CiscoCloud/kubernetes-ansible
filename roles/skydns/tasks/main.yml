@@ -4,37 +4,53 @@
     src: skydns-rc.yaml.j2
     dest: /etc/kubernetes/skydns-rc.yaml
   when: dns_setup
+  tags:
+    - skydns
 
 - name: Write SkyDNS service file
   template:
     src: skydns-svc.yaml.j2
     dest: /etc/kubernetes/skydns-svc.yaml
   when: dns_setup
+  tags:
+    - skydns
 
 - name: Check that the DNS pod exists
   shell: kubectl get rc kube-dns-v3
   register: has_dns_pod
   failed_when: false
   changed_when: false
+  tags:
+    - skydns
 
 - name: Create SkyDNS pod
   shell: kubectl create -f /etc/kubernetes/skydns-rc.yaml
   when: dns_setup and has_dns_pod.rc != 0
+  tags:
+    - skydns
 
 - name: Update DNS replication service
   shell: kubectl update -f /etc/kubernetes/skydns-rc.yaml
   when: dns_setup and has_dns_pod.rc == 0
+  tags:
+    - skydns
 
 - name: Check that the DNS service exists
   shell: kubectl get service kube-dns
   register: has_dns_service
   failed_when: false
   changed_when: false
+  tags:
+    - skydns
 
 - name: Create SkyDNS service
   shell: kubectl create -f /etc/kubernetes/skydns-svc.yaml
   when: dns_setup and has_dns_service.rc != 0
+  tags:
+    - skydns
 
 - name: Update SkyDNS service
   shell: kubectl update -f /etc/kubernetes/skydns-svc.yaml
   when: dns_setup and has_dns_service.rc == 0
+  tags:
+    - skydns

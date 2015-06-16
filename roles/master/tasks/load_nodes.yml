@@ -5,6 +5,8 @@
     dest: "/tmp/node-{{ item }}.json"
   changed_when: false
   with_items: groups[minion_group_name]
+  tags:
+    - master
 
 - name: Load minion definition into masters
   command: /usr/bin/kubectl create -f /tmp/node-{{ item }}.json
@@ -12,6 +14,8 @@
   failed_when: "'already exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "command_result.rc == 0"
   with_items: groups[minion_group_name]
+  tags:
+    - master
 
 - name: Delete minion definitions from masters
   file:
@@ -19,3 +23,5 @@
     state: absent
   changed_when: false
   with_items: groups[minion_group_name]
+  tags:
+    - master

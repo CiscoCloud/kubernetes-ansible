@@ -7,6 +7,8 @@
     - restart apiserver
     - restart controller-manager
     - restart scheduler
+  tags:
+    - master
 
 - name: write config file for controller-manager
   template:
@@ -14,7 +16,8 @@
     dest: /etc/kubernetes/controller-manager
   notify:
     - restart controller-manager
-  tags: load_nodes
+  tags:
+    - master
 
 - name: write the config file for scheduler
   copy:
@@ -22,6 +25,8 @@
     dest: /etc/kubernetes/scheduler
   notify:
     - restart scheduler
+  tags:
+    - master
 
 - name: create kubernetes env dir
   sudo: yes
@@ -31,24 +36,31 @@
     mode: 0755
     owner: kube
     group: kube
+  tags:
+    - master
 
 - name: Enable apiserver
   service:
     name: kube-apiserver
     enabled: yes
     state: started
+  tags:
+    - master
 
 - name: Enable controller-manager
   service:
     name: kube-controller-manager
     enabled: yes
     state: started
+  tags:
+    - master
 
 - name: Enable scheduler
   service:
     name: kube-scheduler
     enabled: yes
     state: started
+  tags:
+    - master
 
 - include: load_nodes.yml
-  tags: load_nodes

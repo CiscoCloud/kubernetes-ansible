@@ -4,6 +4,8 @@
   register: iptablesrules
   always_run: yes
   changed_when: false
+  tags:
+    - flannel
 
 - name: enable kernel packet forwarding
   sysctl:
@@ -12,7 +14,11 @@
     sysctl_set: yes
     state: present
     reload: yes
+  tags:
+    - flannel
 
 - name: enable flannel network masquarading
   command: /sbin/iptables -t nat -A POSTROUTING -s {{ kube_overlay_ip }}/16 -j MASQUERADE -m comment --comment "flannel_nat"
   when: iptablesrules.stdout.find("flannel_nat") == -1
+  tags:
+    - flannel
