@@ -22,9 +22,16 @@ You can safely combine `etcd` and `kubernetes master` on one host, eventually yo
 For this setup you will need 1 host that would be `kubernetes master` and some amount of hosts as `minions`.
 I suggest you using at least 2 minion nodes to test flannel or any other networking for kubernetes.
 
-If you already have prepared hosts you cat provide simple ansible inventory and update group variables in `group_vars/all.yml`
+If you already have prepared hosts you can provide simple ansible inventory (sample is in root of project) and update group variables in `group_vars/all.yml` if it's needed.
 
 Also you can provision hosts on OpenStack using Terraform. Examples provided in `terraform/` folder. Copy sample `.tf` file in project home, fill in all fields and provide number of nodes ( e.g. 1 control and 3 worker nodes ).
+
+### Firewall notice
+If you running on some cloud provider make sure that firewall configuration permits traffic beetween nodes.
+
+Port list on roles:
+TBD
+
 
 ### Run ansible playbooks
 
@@ -33,11 +40,13 @@ This guide not provides any information like "Getting started with Ansible". So 
 First of all look into `group_vars/all.yml` and make changes if needed.
 
 To run ansible on hosts you prepared run:
+
 ```
 ansible-playbook -i inventory setup.yml
 ```
 
 If you used Terraform to provision your hosts you can use script that provides dynamic inventory from `.tfstate`
+
 ```
 ansible-playbook -i plugins/inventory/terraform.py setup.yml
 ```
