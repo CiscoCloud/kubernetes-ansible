@@ -26,9 +26,12 @@
     state: latest
 
 - name: bootstrap virt7-testing repo
-  copy: src=virt7-testing.repo
-        dest=/etc/yum.repos.d/
-        owner=root group=root mode=0644
+  copy:
+    src: virt7-testing.repo
+    dest: /etc/yum.repos.d/
+    owner: root
+    group: root
+    mode: 0644
 
 - name: Set IP address variables
   set_fact:

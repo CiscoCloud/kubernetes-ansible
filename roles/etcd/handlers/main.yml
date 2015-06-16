@@ -6,8 +6,12 @@
 
 - name: Restart etcd
   sudo: yes
-  service: name={{etcd_service}} state=restarted
+  service:
+    name: "{{ etcd_service }}"
+    state: restarted
   when: etcd_peers.changed
 
 - name: restart iptables
-  service: name=iptables state=restarted
+  service:
+    name: iptables
+    state: restarted

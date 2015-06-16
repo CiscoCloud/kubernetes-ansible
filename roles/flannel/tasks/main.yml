@@ -12,15 +12,21 @@
   changed_when: false
 
 - name: delete flannel config json
-  file: name=/tmp/flannel.json state=absent
+  file:
+    name: /tmp/flannel.json
+    state: absent
 
 - name: install flannel
-  yum: name=flannel state=latest
+  yum:
+    name: flannel
+    state: latest
 
 - name: install flannel sysconfig file
-  template: src=flanneld.j2 dest=/etc/sysconfig/flanneld
+  template:
+    src: flanneld.j2
+    dest: /etc/sysconfig/flanneld
   notify:
-          - restart flannel
+    - restart flannel
 
 - name: configure docker network options
   sudo: yes
@@ -32,10 +38,13 @@
     state: present
 
 - name: launch flannel
-  service: name=flanneld state=started enabled=yes
+  service:
+    name: flanneld
+    state: started
+    enabled: yes
   notify:
-          - stop docker
-          - delete docker0
-          - start docker
+    - stop docker
+    - delete docker0
+    - start docker
 
 - include: iptables.yml

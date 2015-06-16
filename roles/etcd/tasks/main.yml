@@ -1,25 +1,36 @@
 ---
 - name: Install etcd package
   sudo: yes
-  yum: pkg=etcd state=latest
+  yum:
+    pkg: etcd
+    state: latest
 
 - name: Reset default config file
   sudo: yes
-  file: path=/etc/etcd/etcd.conf state=absent
+  file:
+    path: /etc/etcd/etcd.conf
+    state: absent
 
 - name: Create service directory
   sudo: yes
-  file: path={{etcd_service_dir}} state=directory mode=0755
+  file:
+    path: "{{ etcd_service_dir }}"
+    state: directory
+    mode: 0755
 
 - name: Create peers config file
   sudo: yes
-  template: src=10-peers.conf.j2 dest={{etcd_service_dir}}/10-peers.conf
+  template:
+    src: 10-peers.conf.j2
+    dest: "{{ etcd_service_dir }}"/10-peers.conf
   register: etcd_peers
   notify:
-          - Reload systemd
-          - Restart etcd
+    - Reload systemd
+    - Restart etcd
 
 - name: Enable and start etcd service
   sudo: yes
-  service: name={{etcd_service}} enabled=yes state=started
-
+  service:
+     name: "{{ etcd_service }}"
+     enabled: yes
+     state: started

@@ -1,6 +1,6 @@
 ---
 - hosts:
-        - role=worker
+    - role=worker
   sudo: yes
   roles:
-        - flannel
+    - flannel
