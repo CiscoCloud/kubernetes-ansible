@@ -10,6 +10,21 @@
   tags:
     - common
 
+- name: Check if selinux enforcing
+  sudo: yes
+  command: getenforce
+  register: selinux
+  changed_when: false
+  tags:
+    - common
+
+- name: Set selinux permissive because tokens and selinux don't work together
+  sudo: yes
+  selinux: state=permissive policy=targeted
+  when: "'Enforcing' in selinux.stdout"
+  tags:
+    - common
+
 # add hosts to /etc/hosts
 - name: configure hosts file
   sudo: yes
@@ -28,15 +43,5 @@
   yum:
     name: epel-release
     state: latest
-  tags:
-    - common
-
-- name: bootstrap virt7-testing repo
-  copy:
-    src: virt7-testing.repo
-    dest: /etc/yum.repos.d/
-    owner: root
-    group: root
-    mode: 0644
   tags:
     - common
