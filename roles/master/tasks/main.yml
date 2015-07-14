@@ -1,5 +1,17 @@
 ---
+- name: Install kubernetes master
+  sudo: yes
+  yum:
+    pkg=kubernetes-master
+    state=latest
+    enablerepo=virt7-docker-common-candidate
+  notify:
+    - restart daemons
+  tags:
+    - master
+
 - name: write the config files for api server
+  sudo: yes
   template:
     src: apiserver.j2
     dest: /etc/kubernetes/apiserver
@@ -11,6 +23,7 @@
     - master
 
 - name: write config file for controller-manager
+  sudo: yes
   template:
     src: controller-manager.j2
     dest: /etc/kubernetes/controller-manager
@@ -20,6 +33,7 @@
     - master
 
 - name: write the config file for scheduler
+  sudo: yes
   copy:
     src: scheduler
     dest: /etc/kubernetes/scheduler
@@ -40,6 +54,7 @@
     - master
 
 - name: Enable apiserver
+  sudo: yes
   service:
     name: kube-apiserver
     enabled: yes
@@ -48,6 +63,7 @@
     - master
 
 - name: Enable controller-manager
+  sudo: yes
   service:
     name: kube-controller-manager
     enabled: yes
@@ -56,6 +72,7 @@
     - master
 
 - name: Enable scheduler
+  sudo: yes
   service:
     name: kube-scheduler
     enabled: yes

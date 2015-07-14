@@ -1,7 +1,8 @@
 ---
 - name: Copy minion definitions to master
+  sudo: yes
   template:
-    src: node-v1beta3.j2
+    src: node-v1.j2
     dest: "/tmp/node-{{ item }}.json"
   changed_when: false
   with_items: groups[minion_group_name]
@@ -9,6 +10,7 @@
     - master
 
 - name: Load minion definition into masters
+  sudo: yes
   command: /usr/bin/kubectl create -f /tmp/node-{{ item }}.json
   register: command_result
   failed_when: "'already exists' not in command_result.stderr and command_result.rc != 0"
@@ -18,6 +20,7 @@
     - master
 
 - name: Delete minion definitions from masters
+  sudo: yes
   file:
     path: "/tmp/node-{{ item }}.json"
     state: absent
