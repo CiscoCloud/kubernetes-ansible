@@ -25,6 +25,16 @@
   tags:
     - common
 
+- name: disable firewalld
+  sudo: yes
+  service:
+    name: firewalld
+    enabled: false
+    state: stopped
+  when: ansible_distribution == "CentOS" and ansible_distribution_version == "7.1.1503"
+  tags:
+    - common
+
 # add hosts to /etc/hosts
 - name: configure hosts file
   sudo: yes
