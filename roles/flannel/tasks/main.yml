@@ -16,6 +16,7 @@
     - flannel
 
 - name: delete flannel config json
+  sudo: yes
   file:
     name: /tmp/flannel.json
     state: absent
@@ -23,6 +24,7 @@
     - flannel
 
 - name: install flannel
+  sudo: yes
   yum:
     name: flannel
     state: latest
@@ -30,6 +32,7 @@
     - flannel
 
 - name: install flannel sysconfig file
+  sudo: yes
   template:
     src: flanneld.j2
     dest: /etc/sysconfig/flanneld
@@ -50,6 +53,7 @@
     - flannel
 
 - name: launch flannel
+  sudo: yes
   service:
     name: flanneld
     state: started

@@ -1,5 +1,6 @@
 ---
 - name: restart daemons
+  sudo: yes
   command: /bin/true
   notify:
     - restart apiserver
@@ -7,21 +8,25 @@
     - restart scheduler
 
 - name: restart apiserver
+  sudo: yes
   service:
     name: kube-apiserver
     state: restarted
 
 - name: restart controller-manager
+  sudo: yes
   service:
     name: kube-controller-manager
     state: restarted
 
 - name: restart scheduler
+  sudo: yes
   service:
     name: kube-scheduler
     state: restarted
 
 - name: restart iptables
+  sudo: yes
   service:
     name: iptables
     state: restarted

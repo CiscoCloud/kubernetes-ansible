@@ -1,5 +1,17 @@
 ---
+- name: Install kubernetes node
+  sudo: yes
+  yum:
+    pkg=kubernetes-node
+    state=latest
+    enablerepo=virt7-docker-common-candidate
+  notify:
+    - restart daemons
+  tags:
+    - minion
+
 - name: write the config files for kubelet
+  sudo: yes
   template:
     src: kubelet.j2
     dest: /etc/kubernetes/kubelet
@@ -9,6 +21,7 @@
     - minion
 
 - name: write the config files for proxy
+  sudo: yes
   template:
     src: proxy.j2
     dest: /etc/kubernetes/proxy
@@ -18,6 +31,7 @@
     - minion
 
 - name: Enable kubelet
+  sudo: yes
   service:
     name: kubelet
     enabled: yes
@@ -26,6 +40,7 @@
     - minion
 
 - name: Enable proxy
+  sudo: yes
   service:
     name: kube-proxy
     enabled: yes

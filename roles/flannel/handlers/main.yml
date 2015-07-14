@@ -1,5 +1,6 @@
 ---
 - name: restart flannel
+  sudo: yes
   service:
     name: flanneld
     state: restarted
@@ -9,20 +10,24 @@
     - start docker
 
 - name: stop docker
+  sudo: yes
   service:
     name: docker
     state: stopped
 
 - name: delete docker0
+  sudo: yes
   command: ip link delete docker0
   ignore_errors: yes
 
 - name: start docker
+  sudo: yes
   service:
     name: docker
     state: started
 
 - name: restart kubelet
+  sudo: yes
   service:
     name: kubelet
     state: restarted
