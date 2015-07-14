@@ -17,9 +17,9 @@
   tags:
     - skydns
 
-- name: Check that the DNS pod exists
+- name: Check that the DNS RC exists
   sudo: yes
-  shell: kubectl get rc kube-dns-v3
+  shell: kubectl get rc kube-dns-v8 --namespace=kube-system
   register: has_dns_pod
   failed_when: false
   changed_when: false
@@ -42,7 +42,7 @@
 
 - name: Check that the DNS service exists
   sudo: yes
-  shell: kubectl get service kube-dns
+  shell: kubectl get service kube-dns --namespace=kube-system
   register: has_dns_service
   failed_when: false
   changed_when: false
