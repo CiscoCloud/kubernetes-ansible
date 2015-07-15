@@ -1,5 +1,5 @@
 # ansible remote user account
-ansible_ssh_user: centos
+# ansible_ssh_user: centos
 
 # ansible groups for service configuration
 etcd_group_name: role=control
