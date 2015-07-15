@@ -42,17 +42,6 @@
   tags:
     - flannel
 
-# - name: configure docker network options
-#   sudo: yes
-#   when: dns_setup|bool
-#   lineinfile:
-#     dest: /etc/sysconfig/docker-network
-#     regexp: ^DOCKER_NETWORK_OPTIONS
-#     line: DOCKER_NETWORK_OPTIONS='--dns {{ dns_server }} --dns-search {{ dns_domain }}'
-#     state: present
-#   tags:
-#     - flannel
-
 - name: launch flannel
   sudo: yes
   service:
