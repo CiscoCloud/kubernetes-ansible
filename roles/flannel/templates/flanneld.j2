@@ -9,5 +9,5 @@ FLANNEL_ETCD_KEY="/coreos.com/network"
 
 # Any additional options that you want to pass
 # Set this to your management network which your hosts are networked together
-FLANNEL_OPTIONS="-iface=eth0"
+FLANNEL_OPTIONS="-iface={{ ansible_default_ipv4.interface }}"
 

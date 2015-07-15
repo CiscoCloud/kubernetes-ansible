@@ -12,7 +12,6 @@
   yum:
     name: docker
     state: latest
-    enablerepo: virt7-testing
   tags:
     - docker
 

@@ -1,21 +1,18 @@
 ---
 - hosts: all
-  sudo: yes
   roles:
     - common
 
 - hosts: role=control
-  sudo: yes
+  gather_facts: no
   roles:
     - etcd
-    - kubernetes
     - master
     - skydns
 
 - hosts: role=worker
-  sudo: yes
+  gather_facts: no
   roles:
     - docker
     - flannel
-    - kubernetes
     - minion
