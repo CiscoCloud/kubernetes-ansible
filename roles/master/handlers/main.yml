@@ -24,9 +24,3 @@
   service:
     name: kube-scheduler
     state: restarted
-
-- name: restart iptables
-  sudo: yes
-  service:
-    name: iptables
-    state: restarted
