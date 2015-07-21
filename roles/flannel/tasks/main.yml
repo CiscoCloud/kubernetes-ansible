@@ -49,9 +49,7 @@
     state: started
     enabled: yes
   notify:
-    - stop docker
-    - delete docker0
-    - start docker
+    - restart flannel
   tags:
     - flannel
 
