@@ -1,0 +1,29 @@
+---
+- name: download calicoctl from github repo
+  sudo: yes
+  get_url:
+    url=https://github.com/Metaswitch/calico-docker/releases/download/{{ calico_version }}/calicoctl
+    dest={{ calico_binpath }}/calicoctl
+    mode=0755
+    force=yes
+  tags:
+    - calico
+
+- name: create calico-node unit
+  sudo: yes
+  template:
+    src: calico-node.service.j2
+    dest: "/lib/systemd/system/calico-node.service.conf"
+  notify:
+    - reload systemd
+  tags:
+    - calico
+
+- name: enable and start calico-node service
+  sudo: yes
+  service:
+     name: calico-node
+     enabled: yes
+     state: started
+  tags:
+    - calico

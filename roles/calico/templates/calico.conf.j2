@@ -1,0 +1,4 @@
+# Docker network options for Calico
+DOCKER_OPT_BIP="{{ kube_overlay_network|ipsubnet(16, 256|random)|ipaddr(1) }}"
+DOCKER_OPT_MTU="--mtu=1472"
+DOCKER_NETWORK_OPTIONS="--bridge={{ calico_bridge }} --iptables=false --ip-masq=false"

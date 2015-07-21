@@ -1,0 +1,4 @@
+---
+calico_version: "v0.5.1"
+calico_binpath: "/usr/bin"
+calico_bridge: "cbr0"
