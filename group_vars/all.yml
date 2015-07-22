@@ -6,6 +6,8 @@ etcd_group_name: role=control
 master_group_name: role=control
 minion_group_name: role=worker
 
+cluster_name: cluster.local
+
 # Kubernetes internal network for services, unused block of space.
 kube_service_addresses: 10.254.0.0/16
 
@@ -24,12 +26,6 @@ kube_overlay_network: 4.0.0.0/16
 
 # Turn this varable to 'false' to disable whole DNS configuration.
 dns_setup: true
-
-# Internal DNS domain name.
-# This domain must not be used in your network. Services will be discoverable
-# under <service-name>.<namespace>.<domainname>, e.g.
-# myservice.default.kube.local
-dns_domain: cluster.local
 
 # Number of replicas of DNS instances started on kubernetes
 dns_replicas: 1
