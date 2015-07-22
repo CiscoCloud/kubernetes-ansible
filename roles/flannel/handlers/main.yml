@@ -25,9 +25,3 @@
   service:
     name: docker
     state: started
-
-- name: restart kubelet
-  sudo: yes
-  service:
-    name: kubelet
-    state: restarted

@@ -10,9 +10,3 @@
     name: etcd
     state: restarted
   when: etcd_peers.changed
-
-- name: restart iptables
-  sudo: yes
-  service:
-    name: iptables
-    state: restarted

@@ -17,9 +17,3 @@
   service:
     name: kube-proxy
     state: restarted
-
-- name: restart iptables
-  sudo: yes
-  service:
-    name: iptables
-    state: restarted

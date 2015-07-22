@@ -14,7 +14,6 @@ KUBELET_HOSTNAME="--hostname_override={{ inventory_hostname }}"
 KUBELET_API_SERVER="--api_servers=http://{{ groups[master_group_name][0] }}:8080"
 
 
-
 {% if dns_setup %}
 KUBELET_ARGS="--cluster_dns={{ dns_server }} --cluster_domain={{ dns_domain }}"
 {% else %}
