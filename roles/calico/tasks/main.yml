@@ -9,11 +9,21 @@
   tags:
     - calico
 
+- name: create calico environment config
+  sudo: yes
+  template:
+    src: calico-env.j2
+    dest: "/etc/sysconfig/calico"
+  notify:
+    - restart calico
+  tags:
+    - calico
+
 - name: create calico-node unit
   sudo: yes
   template:
     src: calico-node.service.j2
-    dest: "/lib/systemd/system/calico-node.service.conf"
+    dest: "/lib/systemd/system/calico-node.service"
   notify:
     - reload systemd
   tags:

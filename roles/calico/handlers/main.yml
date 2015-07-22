@@ -2,3 +2,9 @@
 - name: reload systemd
   sudo: yes
   shell: systemctl daemon-reload
+
+- name: restart calico
+  sudo: yes
+  service:
+    name: calico-node
+    state: restarted

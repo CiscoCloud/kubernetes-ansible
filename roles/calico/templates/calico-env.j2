@@ -1,9 +1,5 @@
 #!/usr/bin/bash
-# This node's IPv4 address
-DEFAULT_IPV4={{ ansible_default_ipv4.interface }}
-
-{% if ansible_fqdn in groups[minion_group_name] %}
-
+# Calico environment variables
 # Location of etcd cluster - used by the calico plugin
 ETCD_AUTHORITY={{ groups[etcd_group_name][0] }}:4001
 
@@ -12,4 +8,3 @@ KUBE_API_ROOT=http:{{ groups[master_group_name][0] }}:8080/api/v1/
 
 # Location of the calicoctl binary - used by the calico plugin
 CALICOCTL_PATH={{ calico_binpath }}/calicoctl
-{% endif %}

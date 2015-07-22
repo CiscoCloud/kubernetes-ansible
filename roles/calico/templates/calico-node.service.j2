@@ -2,10 +2,10 @@
 Description=calicoctl node
 
 [Service]
-EnvironmentFile=/etc/network-environment
+EnvironmentFile=/etc/sysconfig/calico
 User=root
 PermissionsStartOnly=true
 ExecStartPre=/usr/bin/calicoctl checksystem --fix
-ExecStart=/usr/bin/calicoctl node --ip={{ ansible_default_ipv4.interface }} {% if ansible_fqdn in groups[master_group_name] %} --kubernetes {% endif %}
+ExecStart=/usr/bin/calicoctl node --ip={{ ansible_default_ipv4.interface }} {% if ansible_fqdn in groups[minion_group_name] %} --kubernetes {% endif %}
 RemainAfterExit=yes
 Type=oneshot
