@@ -19,7 +19,7 @@
   notify:
     - restart daemons
 
-- name: token | generate tokens for node components
+- name: tokens | generate tokens for node components
   sudo: yes
   command: "{{ kube_script_dir }}/kube-gen-token.sh {{ item[0] }}-{{ item[1] }}"
   environment:

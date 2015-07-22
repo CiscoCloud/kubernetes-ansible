@@ -22,7 +22,7 @@
     creates: "{{ kube_cert_dir }}/server.crt"
   environment:
     MASTER_IP: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
-    MASTER_NAME: "kubernetes"
+    MASTER_NAME: "{{ inventory_hostname }}"
     DNS_DOMAIN: "{{ dns_domain }}"
     SERVICE_CLUSTER_IP_RANGE: "{{ kube_service_addresses }}"
     CERT_DIR: "{{ kube_cert_dir }}"
@@ -41,3 +41,5 @@
     - "{{ kube_cert_dir }}/server.key"
     - "{{ kube_cert_dir }}/kubecfg.crt"
     - "{{ kube_cert_dir }}/kubecfg.key"
+    - "{{ kube_cert_dir }}/kubelet.crt"
+    - "{{ kube_cert_dir }}/kubelet.key"
