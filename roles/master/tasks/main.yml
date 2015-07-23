@@ -77,14 +77,15 @@
   tags:
     - master
 
-- name: create kubernetes env dir
+- name: populate users for basic auth in API
   sudo: yes
-  file:
-    path: /var/run/kubernetes
-    state: directory
-    mode: 0755
-    owner: kube
-    group: kube
+  lineinfile:
+    dest: "{{ kube_users_dir }}/known_users.csv"
+    create: yes
+    line: '{{ item.value.pass }},{{ item.key }},{{ item.value.role }}'
+  with_dict: "{{ kube_users }}"
+  notify:
+    - restart apiserver
   tags:
     - master
 

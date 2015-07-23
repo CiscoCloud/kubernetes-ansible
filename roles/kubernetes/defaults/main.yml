@@ -17,6 +17,9 @@ kube_cert_dir: "{{ kube_config_dir }}/certs"
 # This is where all of the bearer tokens will be stored
 kube_token_dir: "{{ kube_config_dir }}/tokens"
 
+# This is where to save basic auth file
+kube_users_dir: "{{ kube_config_dir }}/users"
+
 # This is where you can drop yaml/json files and the kubelet will run those
 # pods on startup
 kube_manifest_dir: "{{ kube_config_dir }}/manifests"
