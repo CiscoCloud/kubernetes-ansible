@@ -7,11 +7,13 @@
   gather_facts: no
   roles:
     - etcd
+    - flannel
     - master
-    - skydns
+    #- skydns
 
 - hosts: role=worker
   gather_facts: no
   roles:
+    - docker
     - flannel
     - minion
