@@ -6,6 +6,18 @@ etcd_group_name: role=control
 master_group_name: role=control
 minion_group_name: role=worker
 
+# Users to create for basic auth in Kubernetes API via HTTP
+kube_users:
+  kube:
+    pass: changeme
+    role: admin
+  root:
+    pass: changeme
+    role: admin
+
+# Kubernetes cluster name, also will be used as DNS domain
+cluster_name: cluster.local
+
 # Kubernetes internal network for services, unused block of space.
 kube_service_addresses: 10.254.0.0/16
 
@@ -25,19 +37,5 @@ kube_overlay_network: 4.0.0.0/16
 # Turn this varable to 'false' to disable whole DNS configuration.
 dns_setup: true
 
-# Internal DNS domain name.
-# This domain must not be used in your network. Services will be discoverable
-# under <service-name>.<namespace>.<domainname>, e.g.
-# myservice.default.kube.local
-dns_domain: cluster.local
-
 # Number of replicas of DNS instances started on kubernetes
 dns_replicas: 1
-
-# IP address of the DNS server.
-# Kubernetes will create a pod with several containers, serving as the DNS
-# server and expose it under this IP address. The IP address must be from
-# the range specified as kube_service_addresses above.
-# And this is the IP address you should use as address of the DNS server
-# in your containers.
-dns_server: 10.254.0.253

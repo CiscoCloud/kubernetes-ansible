@@ -1,13 +1,18 @@
 ---
+- name: reconfig docker
+  sudo: yes
+  command: /bin/true
+  notify:
+    - stop docker
+    - delete docker0
+    - start docker
+  when: inventory_hostname in groups[minion_group_name]
+
 - name: restart flannel
   sudo: yes
   service:
     name: flanneld
     state: restarted
-  notify:
-    - stop docker
-    - delete docker0
-    - start docker
 
 - name: stop docker
   sudo: yes
