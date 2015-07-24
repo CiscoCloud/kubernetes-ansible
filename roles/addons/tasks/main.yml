@@ -1,0 +1,22 @@
+---
+- name: Write kube-system namespace manifest
+  sudo: yes
+  copy:
+    src=kube-system.yaml
+    dest={{ kube_manifest_dir }}/kube-system.yaml
+
+- name: Check kube-system namespace is present
+  sudo: yes
+  shell: kubectl get namespace kube-system
+  register: kube_system_exists
+  failed_when: false
+  changed_when: false
+  tags:
+    - addons
+
+- name: Create kube-system namespace
+  sudo: yes
+  shell: kubectl create -f {{ kube_manifest_dir }}/kube-system.yaml
+  when: kube_system_exists.rc != 0
+  tags:
+    - addons

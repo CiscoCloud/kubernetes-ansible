@@ -7,6 +7,10 @@
   sudo: yes
   file: path={{ kube_script_dir }} state=directory
 
+- name: Make sure manifest directory exists
+  sudo: yes
+  file: path={{ kube_manifest_dir }} state=directory
+
 - name: write the global config file
   sudo: yes
   template: 

@@ -9,7 +9,8 @@
     - etcd
     - flannel
     - master
-    #- skydns
+    - addons
+    - skydns
 
 - hosts: role=worker
   gather_facts: no
