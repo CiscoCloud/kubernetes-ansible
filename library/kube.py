@@ -151,6 +151,10 @@ class KubeManager(object):
         return self._execute(cmd)
 
     def replace(self):
+
+        if not self.force and not self.exists():
+            return []
+
         cmd = ['replace']
         if self.api_version != 'v1':
             cmd = ['update']
@@ -166,6 +170,10 @@ class KubeManager(object):
         return self._execute(cmd)
 
     def delete(self):
+
+        if not self.force and not self.exists():
+            return []
+
         cmd = ['delete']
 
         if self.filename:
@@ -215,6 +223,10 @@ class KubeManager(object):
         return True
 
     def stop(self):
+
+        if not self.force and not self.exists():
+            return []
+
         cmd = ['stop']
 
         if self.filename:
