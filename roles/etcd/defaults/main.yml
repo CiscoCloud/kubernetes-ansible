@@ -1,2 +1,0 @@
----
-etcd_service_dir: "/etc/systemd/system/etcd.service.d"
