@@ -218,7 +218,7 @@ class KubeManager(object):
             cmd.append('--all-namespaces')
 
         result = self._execute_nofail(cmd)
-        if not result or len(result) != 1:
+        if not result:
             return False
         return True
 
