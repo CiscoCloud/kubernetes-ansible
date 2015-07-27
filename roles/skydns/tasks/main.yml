@@ -4,6 +4,7 @@
   template:
     src: skydns-rc.yaml.j2
     dest: /etc/kubernetes/skydns-rc.yaml
+  register: dns_rc_def
   when: dns_setup
   tags:
     - skydns
@@ -13,52 +14,32 @@
   template:
     src: skydns-svc.yaml.j2
     dest: /etc/kubernetes/skydns-svc.yaml
+  register: dns_svc_def
   when: dns_setup
   tags:
     - skydns
 
-- name: Check that the DNS RC exists
+- name: Create or update SkyDNS replication controller
   sudo: yes
-  shell: kubectl get rc kube-dns-v8 --namespace=kube-system
-  register: has_dns_pod
-  failed_when: false
-  changed_when: false
+  kube:
+    namespace: kube-system
+    resource: rc
+    name: kube-dns-v8
+    filename: /etc/kubernetes/skydns-rc.yaml
+    state: "{{ dns_rc_def.changed | ternary('latest','present') }}"
+  when: dns_setup
   tags:
     - skydns
 
-- name: Create SkyDNS pod
+- name: Create or update SkyDNS service
   sudo: yes
-  shell: kubectl create -f /etc/kubernetes/skydns-rc.yaml
-  when: dns_setup and has_dns_pod.rc != 0
+  kube:
+    namespace: kube-system
+    resource: svc
+    name: kube-dns
+    filename: /etc/kubernetes/skydns-svc.yaml
+    state: "{{ dns_svc_def.changed | ternary('latest','present') }}"
+  when: dns_setup
   tags:
     - skydns
 
-- name: Update DNS replication service
-  sudo: yes
-  shell: kubectl replace -f /etc/kubernetes/skydns-rc.yaml
-  when: dns_setup and has_dns_pod.rc == 0
-  tags:
-    - skydns
-
-- name: Check that the DNS service exists
-  sudo: yes
-  shell: kubectl get service kube-dns --namespace=kube-system
-  register: has_dns_service
-  failed_when: false
-  changed_when: false
-  tags:
-    - skydns
-
-- name: Create SkyDNS service
-  sudo: yes
-  shell: kubectl create -f /etc/kubernetes/skydns-svc.yaml
-  when: dns_setup and has_dns_service.rc != 0
-  tags:
-    - skydns
-
-- name: Update SkyDNS service
-  sudo: yes
-  shell: kubectl replace -f /etc/kubernetes/skydns-svc.yaml
-  when: dns_setup and has_dns_service.rc == 0
-  tags:
-    - skydns
