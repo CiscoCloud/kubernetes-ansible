@@ -6,11 +6,19 @@
 #     state: latest
 #   tags:
 #     - docker
+
+- name: Install docker centos7 repo
+  sudo: yes
+  copy:
+    src=docker.repo
+    dest=/etc/yum.repos.d/docker.repo
+
 - name: install docker
   sudo: yes
   yum:
     name: docker
     state: latest
+    enablerepo: dockerrepo
   tags:
     - docker
 
