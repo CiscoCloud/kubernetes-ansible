@@ -50,7 +50,11 @@ If you used Terraform to provision your hosts you can use script that provides d
 ```
 ansible-playbook -i plugins/inventory/terraform.py setup.yml
 ```
-Then if needed you can get list of hosts with `./get_tf_hosts.py` and put them directly in your `/etc/hosts` file.
+Then if needed you can get list of hosts with `terraform.py` and put them directly in your `/etc/hosts` file.
+
+```
+./plugins/inventory/terraform.py --hostfile >> /etc/hosts
+```
 
 ### Check cluster deployment
 
