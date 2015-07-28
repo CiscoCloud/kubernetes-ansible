@@ -6,6 +6,7 @@
 #     state: latest
 #   tags:
 #     - docker
+
 - name: install docker
   sudo: yes
   yum:

@@ -5,7 +5,7 @@
  - Install etcd server
  - Install docker
  - Install flanneld and put config in etcd
- - Install Kubernetes package from CentOS vitr7-testing repo
+ - Install Kubernetes package from CentOS virt7-docker-common-candidate repo
  - Configure Kubernetes master
  - Configure Kubernetes minion
  - Install kube-dns service discovery and DNS resolution pod
@@ -50,8 +50,78 @@ If you used Terraform to provision your hosts you can use script that provides d
 ```
 ansible-playbook -i plugins/inventory/terraform.py setup.yml
 ```
-Then if needed you can get list of hosts with `./get_tf_hosts.py` and put them directly in your `/etc/hosts` file.
+Then if needed you can get list of hosts with `terraform.py` and put them directly in your `/etc/hosts` file.
+
+```
+./plugins/inventory/terraform.py --hostfile >> /etc/hosts
+```
 
 ### Check cluster deployment
 
-TBD
+#### Validate Control
+
+- Check if all nodes are ready
+
+        kubectl get nodes -o wide
+
+- Check if all Pods, Replication Controllers and Services are running
+
+        kubectl get rc,svc,po --all-namespaces -o wide
+
+- Check status of Kubernete processes
+
+        sudo systemctl status etcd kube-apiserver kube-controller-manager kube-scheduler -l
+
+- View logs of Kubernete processes
+
+        sudo journalctl -u etcd
+        sudo journalctl -u kube-apiserver
+        sudo journalctl -u kube-controller-manager
+        sudo journalctl -u kube-scheduler
+
+- Verify DNS working
+
+        # https://github.com/GoogleCloudPlatform/kubernetes/tree/v1.0.1/cluster/addons/dns
+        # busybox.yaml
+        apiVersion: v1
+        kind: Pod
+        metadata:
+          name: busybox
+          namespace: default
+        spec:
+          containers:
+          - image: busybox
+            command:
+              - sleep
+              - "3600"
+            imagePullPolicy: IfNotPresent
+            name: busybox
+          restartPolicy: Always
+
+
+        kubectl create -f busybox.yaml
+        kubectl get pods busybox
+        kubectl exec busybox -- nslookup kubernetes
+
+- Verify NAT settings
+
+        sudo iptables -t nat -L -n -v
+
+
+#### Validate Nodes
+
+- Check status of Kubernete processes
+
+        sudo systemctl status kubelet kube-proxy flanneld docker -l
+
+- View logs of Kubernete processes
+
+        sudo journalctl -u kubelet
+        sudo journalctl -u kube-proxy
+        sudo journalctl -u flanneld
+        sudo journalctl -u docker
+
+- Verify NAT settings
+
+        sudo iptables -t nat -L -n -v
+

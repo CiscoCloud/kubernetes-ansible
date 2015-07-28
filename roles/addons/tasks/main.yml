@@ -5,18 +5,31 @@
     src=kube-system.yaml
     dest={{ kube_manifest_dir }}/kube-system.yaml
 
-- name: Check kube-system namespace is present
+- name: Create kube-system namespace
   sudo: yes
-  shell: kubectl get namespace kube-system
-  register: kube_system_exists
-  failed_when: false
-  changed_when: false
+  kube:
+    resource: ns
+    name: kube-system
+    filename: "{{ kube_manifest_dir }}/kube-system.yaml"
+    state: present
   tags:
     - addons
 
-- name: Create kube-system namespace
+- name: Run kube-gen-token script to create {{ kube_token_dir }}/known_tokens.csv
   sudo: yes
-  shell: kubectl create -f {{ kube_manifest_dir }}/kube-system.yaml
-  when: kube_system_exists.rc != 0
+  command: "{{ kube_script_dir }}/kube-gen-token.sh {{ item }}"
+  environment:
+    TOKEN_DIR: "{{ kube_token_dir }}"
+  with_items:
+    - "system:dns"
+    - "system:monitoring"
+    - "system:logging"
+  register: gentoken
+  changed_when: "'Added' in gentoken.stdout"
+  notify:
+    - restart apiserver
   tags:
     - addons
+
+- include: skydns.yml
+  when: dns_setup

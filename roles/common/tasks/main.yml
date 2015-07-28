@@ -10,27 +10,16 @@
   tags:
     - common
 
-- name: check if selinux enforcing
-  sudo: yes
-  command: getenforce
-  register: selinux
-  changed_when: false
-  tags:
-    - common
-
-- name: set selinux to permissive
-  sudo: yes
-  selinux: state=permissive policy=targeted
-  when: "'Enforcing' in selinux.stdout"
-  tags:
-    - common
-
-- name: disable firewalld
+# disable firewalld and iptables
+- name: disable firewalld and iptables
   sudo: yes
   service:
-    name: firewalld
+    name: "{{ item }}"
     enabled: false
     state: stopped
+  with_items:
+    - firewalld
+    - iptables-services
   when: ansible_distribution == "CentOS" and ansible_distribution_version == "7.1.1503"
   tags:
     - common
