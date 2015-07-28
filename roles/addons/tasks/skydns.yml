@@ -8,6 +8,7 @@
   when: dns_setup
   tags:
     - addons
+    - skydns
 
 - name: SkyDNS | Write service file
   sudo: yes
@@ -18,6 +19,7 @@
   when: dns_setup
   tags:
     - addons
+    - skydns
 
 - name: SkyDNS | Create or update replication controller
   sudo: yes
@@ -30,6 +32,7 @@
   when: dns_setup
   tags:
     - addons
+    - skydns
 
 - name: SkyDNS | Create or update service
   sudo: yes
@@ -42,3 +45,4 @@
   when: dns_setup
   tags:
     - addons
+    - skydns
