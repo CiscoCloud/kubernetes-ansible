@@ -20,3 +20,19 @@
   when: kube_system_exists.rc != 0
   tags:
     - addons
+
+- name: Run kube-gen-token script to create {{ kube_token_dir }}/known_tokens.csv
+  sudo: yes
+  command: "{{ kube_script_dir }}/kube-gen-token.sh {{ item }}"
+  environment:
+    TOKEN_DIR: "{{ kube_token_dir }}"
+  with_items:
+    - "system:dns"
+    - "system:monitoring"
+    - "system:logging"
+  register: gentoken
+  changed_when: "'Added' in gentoken.stdout"
+  notify:
+    - restart apiserver
+  tags:
+    - addons
