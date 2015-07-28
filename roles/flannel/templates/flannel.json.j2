@@ -1,5 +1,5 @@
 {
-    "Network": "{{ flannel_subnet }}/{{ flannel_prefix }}",
-    "SubnetLen": {{ flannel_host_prefix }},
+    "Network": "{{ overlay_network_subnet }}/{{ overlay_network_prefix }}",
+    "SubnetLen": {{ overlay_network_host_prefix }},
     "Backend": { "Type": "vxlan" }
 }

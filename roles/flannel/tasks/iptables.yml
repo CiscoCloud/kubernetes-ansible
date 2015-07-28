@@ -20,7 +20,7 @@
 
 - name: enable flannel network masquarading
   sudo: yes
-  command: /sbin/iptables -t nat -A POSTROUTING -s "{{ flannel_subnet }}/{{ flannel_prefix }}" -j MASQUERADE -m comment --comment "flannel_nat"
+  command: /sbin/iptables -t nat -A POSTROUTING -s "{{ overlay_network_subnet }}/{{ overlay_network_prefix }}" -j MASQUERADE -m comment --comment "flannel_nat"
   when: iptablesrules.stdout.find("flannel_nat") == -1
   tags:
     - flannel
