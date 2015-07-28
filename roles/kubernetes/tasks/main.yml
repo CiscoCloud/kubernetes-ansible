@@ -13,7 +13,7 @@
 
 - name: write the global config file
   sudo: yes
-  template: 
+  template:
     src: config.j2
     dest: "{{ kube_config_dir }}/config"
   notify:

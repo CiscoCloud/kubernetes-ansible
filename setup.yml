@@ -1,8 +1,11 @@
 ---
+# all facts for all hosts are gathered; and the common packages
+# and configurations are performed on each host.
 - hosts: all
   roles:
     - common
 
+# provide the control plane
 - hosts: role=control
   gather_facts: no
   roles:
@@ -12,6 +15,7 @@
     - addons
     - skydns
 
+# provide the execution plane
 - hosts: role=worker
   gather_facts: no
   roles:
