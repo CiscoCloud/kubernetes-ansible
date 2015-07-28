@@ -5,7 +5,7 @@ FLANNEL_ETCD="http://{{ groups[master_group_name][0] }}:4001"
 
 # etcd configuration key which is queried by flanneld
 # For address range assignment
-FLANNEL_ETCD_KEY="/coreos.com/network"
+FLANNEL_ETCD_KEY="/{{ dns_domain }}/network"
 
 # Any additional options that you want to pass
 # Set this to your management network which your hosts are networked together

@@ -1,17 +1,17 @@
 ---
 - name: create flannel config json
+  run_once: true
   sudo: yes
   template:
     src: flannel.json.j2
     dest: /tmp/flannel.json
-  run_once: true
   tags:
     - flannel
 
 - name: configure flannel in etcd
   run_once: true
   sudo: yes
-  command: 'curl -L http://{{ groups[etcd_group_name][0] }}:4001/v2/keys/coreos.com/network/config -XPUT --data-urlencode value@/tmp/flannel.json'
+  command: 'curl -L http://{{ groups[etcd_group_name][0] }}:4001/v2/keys/{{ dns_domain }}/network/config -XPUT --data-urlencode value@/tmp/flannel.json'
   changed_when: false
   tags:
     - flannel
