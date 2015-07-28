@@ -1,5 +1,5 @@
 ---
-- name: Write SkyDNS pod file
+- name: SkyDNS | Write pod file
   sudo: yes
   template:
     src: skydns-rc.yaml.j2
@@ -7,9 +7,9 @@
   register: dns_rc_def
   when: dns_setup
   tags:
-    - skydns
+    - addons
 
-- name: Write SkyDNS service file
+- name: SkyDNS | Write service file
   sudo: yes
   template:
     src: skydns-svc.yaml.j2
@@ -17,9 +17,9 @@
   register: dns_svc_def
   when: dns_setup
   tags:
-    - skydns
+    - addons
 
-- name: Create or update SkyDNS replication controller
+- name: SkyDNS | Create or update replication controller
   sudo: yes
   kube:
     namespace: kube-system
@@ -29,9 +29,9 @@
     state: "{{ dns_rc_def.changed | ternary('latest','present') }}"
   when: dns_setup
   tags:
-    - skydns
+    - addons
 
-- name: Create or update SkyDNS service
+- name: SkyDNS | Create or update service
   sudo: yes
   kube:
     namespace: kube-system
@@ -41,5 +41,4 @@
     state: "{{ dns_svc_def.changed | ternary('latest','present') }}"
   when: dns_setup
   tags:
-    - skydns
-
+    - addons

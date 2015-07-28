@@ -13,7 +13,6 @@
     - flannel
     - master
     - addons
-    - skydns
 
 # provide the execution plane
 - hosts: role=worker

@@ -30,3 +30,6 @@
     - restart apiserver
   tags:
     - addons
+
+- include: skydns.yml
+  when: dns_setup
