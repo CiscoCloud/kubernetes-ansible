@@ -33,7 +33,7 @@
 
 - name: write the config files for api server
   sudo: yes
-  template: src=apiserver.j2 dest=/etc/kubernetes/apiserver
+  template: src=apiserver.j2 dest={{ kube_config_dir }}/apiserver
   notify:
     - restart daemons
   tags:
@@ -41,7 +41,7 @@
 
 - name: write config file for controller-manager
   sudo: yes
-  template: src=controller-manager.j2 dest=/etc/kubernetes/controller-manager
+  template: src=controller-manager.j2 dest={{ kube_config_dir }}/controller-manager
   notify:
     - restart controller-manager
   tags:
