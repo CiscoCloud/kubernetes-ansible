@@ -1,0 +1,29 @@
+---
+
+- hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: create fragments directory
+      file: path=/tmp/lb_member_fragments state=directory
+
+    - name: generate member replacement template fragments
+      template:
+        src: lb_members.j2
+        dest: "/tmp/lb_member_fragments/member-{{ item }}"
+      with_sequence: start=0 end={{ total_members-1 }}
+
+    - name: generate member replacement template
+      assemble: src=/tmp/lb_member_fragments dest=/tmp/lb_members
+
+    - name: set members for terraform lb
+      replace:
+        dest: "{{ lookup('env','TERRAFORM_STATE_ROOT') }}/terraform/openstack/hosts/main.tf"
+        regexp: '^  #%MEMBERS%$'
+        replace: "{{ lookup('file', '/tmp/lb_members') }}"
+
+    - name: clean up generated template file
+      file: path=/tmp/lb_members state=absent
+
+    - name: clean up generated fragments
+      file: path=/tmp/lb_member_fragments state=absent
+

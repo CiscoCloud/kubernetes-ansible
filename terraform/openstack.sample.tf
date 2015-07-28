@@ -27,6 +27,8 @@ module "dc2-hosts" {
     control_flavor_name = ""
     resource_flavor_name  = ""
     net_id = ""
+    subnet_id = ""
+    floating_pool = ""
     image_name = ""
     keypair_name = "${ module.dc2-keypair.keypair_name }"
     security_groups = "${ module.dc2-secgroup.cluster_name }"

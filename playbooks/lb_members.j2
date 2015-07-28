@@ -1,0 +1,6 @@
+  member {
+    address = "${ openstack_compute_instance_v2.resource.{{ item }}.access_ip_v4 }"
+    port = 443
+    admin_state_up = "true"
+  }
+
