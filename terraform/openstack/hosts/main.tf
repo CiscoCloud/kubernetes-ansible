@@ -1,50 +1,66 @@
 variable auth_url { }
+variable master_count {}
+variable master_flavor { }
+variable datacenter { default = "openstack" }
+variable glusterfs_volume_size { default = "100" } # size is in gigabytes
+variable image_name { }
+variable keypair_name { }
+variable long_name { default = "kubernetes" }
+variable net_id { }
+variable node_count {}
+variable node_flavor { }
+variable security_groups { default = "default" }
+variable short_name { default = "k8s" }
+variable ssh_user { default = "centos" }
 variable tenant_id { }
 variable tenant_name { }
-variable datacenter { default = "openstack" }
-variable short_name { default = "kube" }
-variable long_name { default = "kubernetes-on-openstack" }
-variable control_flavor_name { }
-variable resource_flavor_name { }
-variable net_id { }
-variable keypair_name { }
-variable image_name { }
-variable control_count {}
-variable resource_count {}
-variable security_groups {}
 
 provider "openstack" {
   auth_url = "${ var.auth_url }"
-  tenant_id = "${ var.tenant_id }"
-  tenant_name = "${ var.tenant_name }"
+  tenant_id	= "${ var.tenant_id }"
+  tenant_name	= "${ var.tenant_name }"
 }
 
-resource "openstack_compute_instance_v2" "control" {
-  name = "${ var.short_name}-control-${format("%02d", count.index+1) }"
+resource "openstack_blockstorage_volume_v1" "k8s-glusterfs" {
+  name = "${ var.short_name }-master-glusterfs-${format("%02d", count.index+1) }"
+  description = "${ var.short_name }-master-glusterfs-${format("%02d", count.index+1) }"
+  size = "${ var.glusterfs_volume_size }"
+  metadata = {
+    usage = "container-volumes"
+  }
+  count = "${ var.master_count }"
+}
+
+resource "openstack_compute_instance_v2" "master" {
+  name = "${ var.short_name}-master-${format("%02d", count.index+1) }"
   key_pair = "${ var.keypair_name }"
   image_name = "${ var.image_name }"
-  flavor_name = "${ var.control_flavor_name }"
-  # default security group usually provides you the ability to ssh into the host
-  security_groups = [ "${ var.security_groups }", "default" ]
+  flavor_name = "${ var.master_flavor }"
+  security_groups = [ "${ var.security_groups }" ]
+  network = { uuid  = "${ var.net_id }" }
+  volume = {
+    volume_id = "${element(openstack_blockstorage_volume_v1.k8s-glusterfs.*.id, count.index)}"
+    device = "/dev/vdb"
+  }
+  metadata = {
+    dc = "${var.datacenter}"
+    role = "master"
+    ssh_user = "${ var.ssh_user }"
+  }
+  count = "${ var.master_count }"
+}
+
+resource "openstack_compute_instance_v2" "node" {
+  name = "${ var.short_name}-node-${format("%02d", count.index+1) }"
+  key_pair = "${ var.keypair_name }"
+  image_name = "${ var.image_name }"
+  flavor_name = "${ var.node_flavor }"
+  security_groups = [ "${ var.security_groups }" ]
   network = { uuid = "${ var.net_id }" }
   metadata = {
     dc = "${var.datacenter}"
-    role = "control"
+    role = "node"
+    ssh_user = "${ var.ssh_user }"
   }
-  count = "${ var.control_count }"
+  count = "${ var.node_count }"
 }
-
-resource "openstack_compute_instance_v2" "resource" {
-  name = "${ var.short_name}-worker-${format("%02d", count.index+1) }"
-  key_pair = "${ var.keypair_name }"
-  image_name = "${ var.image_name }"
-  flavor_name = "${ var.resource_flavor_name }"
-  security_groups = [ "${ var.security_groups }", "default" ]
-  network = { uuid = "${ var.net_id }" }
-  metadata = {
-    dc = "${var.datacenter}"
-    role = "worker"
-  }
-  count = "${ var.resource_count }"
-}
-
