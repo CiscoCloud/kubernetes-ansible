@@ -1,10 +1,10 @@
 module "dc2-keypair" {
-	source = "./terraform/openstack/keypair"
-	auth_url = ""
-	tenant_id = ""
-	tenant_name = ""
-	public_key = ""
-	keypair_name = ""
+  source = "./terraform/openstack/keypair"
+  auth_url = ""
+  tenant_id = ""
+  tenant_name = ""
+  public_key = ""
+  keypair_name = ""
 }
 
 module "dc2-hosts-floating" {
