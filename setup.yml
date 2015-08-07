@@ -6,7 +6,7 @@
     - common
 
 # provide the control plane
-- hosts: role=control
+- hosts: role=master
   gather_facts: no
   roles:
     - etcd
@@ -15,7 +15,7 @@
     - addons
 
 # provide the execution plane
-- hosts: role=worker
+- hosts: role=node
   gather_facts: no
   roles:
     - docker
