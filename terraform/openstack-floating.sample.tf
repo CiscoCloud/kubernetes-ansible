@@ -7,19 +7,18 @@ module "dc2-keypair" {
   keypair_name = ""
 }
 
-module "dc2-hosts" {
-  source = "./terraform/openstack/hosts"
+module "dc2-hosts-floating" {
+  source = "./terraform/openstack/hosts-floating"
   auth_url = ""
   datacenter = "dc2"
   tenant_id = ""
   tenant_name = ""
   master_flavor = ""
   node_flavor = ""
-  net_id = ""
   image_name = ""
   keypair_name = "${ module.dc2-keypair.keypair_name }"
   master_count = 1
   node_count = 2
-  security_groups = ""
-  glusterfs_volume_size = 100
+  floating_pool = ""
+  external_net_id = ""
 }
