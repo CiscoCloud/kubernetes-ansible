@@ -9,7 +9,7 @@ variable long_name { default = "kubernetes" }
 variable net_id { }
 variable node_count {}
 variable node_flavor { }
-variable security_groups { default = "default" }
+variable security_groups {  }
 variable short_name { default = "k8s" }
 variable ssh_user { default = "centos" }
 variable tenant_id { }
@@ -36,7 +36,7 @@ resource "openstack_compute_instance_v2" "master" {
   key_pair = "${ var.keypair_name }"
   image_name = "${ var.image_name }"
   flavor_name = "${ var.master_flavor }"
-  security_groups = [ "${ var.security_groups }" ]
+  security_groups = [ "${ var.security_groups }", "default" ]
   network = { uuid  = "${ var.net_id }" }
   volume = {
     volume_id = "${element(openstack_blockstorage_volume_v1.k8s-glusterfs.*.id, count.index)}"
@@ -55,7 +55,7 @@ resource "openstack_compute_instance_v2" "node" {
   key_pair = "${ var.keypair_name }"
   image_name = "${ var.image_name }"
   flavor_name = "${ var.node_flavor }"
-  security_groups = [ "${ var.security_groups }" ]
+  security_groups = [ "${ var.security_groups }", "default" ]
   network = { uuid = "${ var.net_id }" }
   metadata = {
     dc = "${var.datacenter}"

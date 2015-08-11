@@ -8,7 +8,7 @@ variable keypair_name { }
 variable image_name { }
 variable master_count {}
 variable node_count {}
-variable security_groups { default = "default" }
+variable security_groups {  }
 variable floating_pool {}
 variable external_net_id { }
 variable subnet_cidr { default = "10.10.10.0/24" }
@@ -29,7 +29,7 @@ resource "openstack_compute_instance_v2" "master" {
   key_pair              = "${ var.keypair_name }"
   image_name            = "${ var.image_name }"
   flavor_name           = "${ var.master_flavor }"
-  security_groups       = [ "${ var.security_groups }" ]
+  security_groups       = [ "${ var.security_groups }", "default" ]
   network               = { uuid = "${ openstack_networking_network_v2.ms-network.id }" }
   metadata              = {
                             dc = "${var.datacenter}"
@@ -45,7 +45,7 @@ resource "openstack_compute_instance_v2" "node" {
   key_pair              = "${ var.keypair_name }"
   image_name            = "${ var.image_name }"
   flavor_name           = "${ var.node_flavor }"
-  security_groups       = [ "${ var.security_groups }" ]
+  security_groups       = [ "${ var.security_groups }", "default" ]
   network               = { uuid = "${ openstack_networking_network_v2.ms-network.id }" }
   metadata              = {
                             dc = "${var.datacenter}"
