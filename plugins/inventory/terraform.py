@@ -20,12 +20,10 @@ directory and generates an inventory based on them.
 from __future__ import unicode_literals, print_function
 import argparse
 from collections import defaultdict
-from functools import wraps
 import json
 import os
-import re
 
-VERSION = '0.3.0pre'
+VERSION = '0.1.0pre'
 
 
 def tfstates(root=None):
@@ -45,18 +43,12 @@ def iterresources(filenames):
                 for key, resource in module['resources'].items():
                     yield name, key, resource
 
-## READ RESOURCES
+# READ RESOURCES
 PARSERS = {}
 
 
-def _clean_dc(dcname):
-    # Consul DCs are strictly alphanumeric with underscores and hyphens -
-    # ensure that the consul_dc attribute meets these requirements.
-    return re.sub('[^\w_\-]', '-', dcname)
-
-
 def iterhosts(resources):
-    '''yield host tuples of (name, attributes, groups)'''
+    """yield host tuples of (name, attributes, groups)"""
     for module_name, key, resource in resources:
         resource_type, name = key.split('.', 1)
         try:
@@ -71,28 +63,6 @@ def parses(prefix):
     def inner(func):
         PARSERS[prefix] = func
         return func
-
-    return inner
-
-
-def calculate_mi_vars(func):
-    """calculate microservices-infrastructure vars"""
-
-    @wraps(func)
-    def inner(*args, **kwargs):
-        name, attrs, groups = func(*args, **kwargs)
-
-        # attrs
-        if attrs.get('role', '') == 'control':
-            attrs['consul_is_server'] = True
-        else:
-            attrs['consul_is_server'] = False
-
-        # groups
-        if attrs.get('publicly_routable', False):
-            groups.append('publicly_routable')
-
-        return name, attrs, groups
 
     return inner
 
@@ -144,94 +114,7 @@ def parse_bool(string_form):
         raise ValueError('could not convert %r to a bool' % string_form)
 
 
-@parses('digitalocean_droplet')
-@calculate_mi_vars
-def digitalocean_host(resource, tfvars=None):
-    raw_attrs = resource['primary']['attributes']
-    name = raw_attrs['name']
-    groups = []
-
-    attrs = {
-        'id': raw_attrs['id'],
-        'image': raw_attrs['image'],
-        'ipv4_address': raw_attrs['ipv4_address'],
-        'locked': parse_bool(raw_attrs['locked']),
-        'metadata': json.loads(raw_attrs['user_data']),
-        'region': raw_attrs['region'],
-        'size': raw_attrs['size'],
-        'ssh_keys': parse_list(raw_attrs, 'ssh_keys'),
-        'status': raw_attrs['status'],
-        # ansible
-        'ansible_ssh_host': raw_attrs['ipv4_address'],
-        'ansible_ssh_port': 22,
-        'ansible_ssh_user': 'root',  # it's always "root" on DO
-        # generic
-        'public_ipv4': raw_attrs['ipv4_address'],
-        'private_ipv4': raw_attrs['ipv4_address'],
-        'provider': 'digitalocean',
-    }
-
-    # attrs specific to microservices-infrastructure
-    attrs.update({
-        'consul_dc': _clean_dc(attrs['metadata'].get('dc', attrs['region'])),
-        'role': attrs['metadata'].get('role', 'none')
-    })
-
-    # add groups based on attrs
-    groups.append('do_image=' + attrs['image'])
-    groups.append('do_locked=%s' % attrs['locked'])
-    groups.append('do_region=' + attrs['region'])
-    groups.append('do_size=' + attrs['size'])
-    groups.append('do_status=' + attrs['status'])
-    groups.extend('do_metadata_%s=%s' % item
-                  for item in attrs['metadata'].items())
-
-    # groups specific to microservices-infrastructure
-    groups.append('role=' + attrs['role'])
-    groups.append('dc=' + attrs['consul_dc'])
-
-    return name, attrs, groups
-
-
-@parses('softlayer_virtualserver')
-@calculate_mi_vars
-def softlayer_host(resource, module_name):
-    raw_attrs = resource['primary']['attributes']
-    name = raw_attrs['name']
-    groups = []
-
-    attrs = {
-        'id': raw_attrs['id'],
-        'image': raw_attrs['image'],
-        'ipv4_address': raw_attrs['ipv4_address'],
-        'metadata': json.loads(raw_attrs['user_data']),
-        'region': raw_attrs['region'],
-        'ram': raw_attrs['ram'],
-        'cpu': raw_attrs['cpu'],
-        'ssh_keys': parse_list(raw_attrs, 'ssh_keys'),
-        'public_ipv4': raw_attrs['ipv4_address'],
-        'private_ipv4': raw_attrs['ipv4_address_private'],
-        'ansible_ssh_host': raw_attrs['ipv4_address'],
-        'ansible_ssh_port': 22,
-        'ansible_ssh_user': 'root',
-        'provider': 'softlayer',
-    }
-
-    # attrs specific to microservices-infrastructure
-    attrs.update({
-        'consul_dc': _clean_dc(attrs['metadata'].get('dc', attrs['region'])),
-        'role': attrs['metadata'].get('role', 'none')
-    })
-
-    # groups specific to microservices-infrastructure
-    groups.append('role=' + attrs['role'])
-    groups.append('dc=' + attrs['consul_dc'])
-
-    return name, attrs, groups
-
-
 @parses('openstack_compute_instance_v2')
-@calculate_mi_vars
 def openstack_host(resource, module_name):
     raw_attrs = resource['primary']['attributes']
     name = raw_attrs['name']
@@ -240,11 +123,9 @@ def openstack_host(resource, module_name):
     attrs = {
         'access_ip_v4': raw_attrs['access_ip_v4'],
         'access_ip_v6': raw_attrs['access_ip_v6'],
-        'flavor': parse_dict(raw_attrs, 'flavor',
-                             sep='_'),
+        'flavor': parse_dict(raw_attrs, 'flavor', sep='_'),
         'id': raw_attrs['id'],
-        'image': parse_dict(raw_attrs, 'image',
-                            sep='_'),
+        'image': parse_dict(raw_attrs, 'image', sep='_'),
         'key_pair': raw_attrs['key_pair'],
         'metadata': parse_dict(raw_attrs, 'metadata'),
         'network': parse_attr_list(raw_attrs, 'network'),
@@ -253,6 +134,7 @@ def openstack_host(resource, module_name):
         # ansible
         'ansible_ssh_port': 22,
         'ansible_ssh_user': raw_attrs.get('metadata.ssh_user', 'centos'),
+        'ansible_ssh_host': raw_attrs['access_ip_v4'],
         # workaround for an OpenStack bug where hosts have a different domain
         # after they're restarted
         'host_domain': 'novalocal',
@@ -266,17 +148,7 @@ def openstack_host(resource, module_name):
     if 'floating_ip' in raw_attrs:
         attrs['private_ipv4'] = raw_attrs['network.0.fixed_ip_v4']
 
-    try:
-        attrs.update({
-            'ansible_ssh_host': raw_attrs['access_ip_v4'],
-            'publicly_routable': True,
-        })
-    except (KeyError, ValueError):
-        attrs.update({'ansible_ssh_host': '', 'publicly_routable': False})
-
-    # attrs specific to microservices-infrastructure
     attrs.update({
-        'consul_dc': _clean_dc(attrs['metadata'].get('dc', module_name)),
         'role': attrs['metadata'].get('role', 'none'),
     })
 
@@ -286,183 +158,12 @@ def openstack_host(resource, module_name):
     groups.extend('os_metadata_%s=%s' % item
                   for item in attrs['metadata'].items())
     groups.append('os_region=' + attrs['region'])
-
-    # groups specific to microservices-infrastructure
     groups.append('role=' + attrs['metadata'].get('role', 'none'))
-    groups.append('dc=' + attrs['consul_dc'])
 
     return name, attrs, groups
 
 
-@parses('aws_instance')
-@calculate_mi_vars
-def aws_host(resource, module_name):
-    name = resource['primary']['attributes']['tags.Name']
-    raw_attrs = resource['primary']['attributes']
-
-    groups = []
-
-    attrs = {
-        'ami': raw_attrs['ami'],
-        'availability_zone': raw_attrs['availability_zone'],
-        'ebs_block_device': parse_attr_list(raw_attrs, 'ebs_block_device'),
-        'ebs_optimized': parse_bool(raw_attrs['ebs_optimized']),
-        'ephemeral_block_device': parse_attr_list(raw_attrs,
-                                                  'ephemeral_block_device'),
-        'id': raw_attrs['id'],
-        'key_name': raw_attrs['key_name'],
-        'private': parse_dict(raw_attrs, 'private',
-                              sep='_'),
-        'public': parse_dict(raw_attrs, 'public',
-                             sep='_'),
-        'root_block_device': parse_attr_list(raw_attrs, 'root_block_device'),
-        'security_groups': parse_list(raw_attrs, 'security_groups'),
-        'subnet': parse_dict(raw_attrs, 'subnet',
-                             sep='_'),
-        'tags': parse_dict(raw_attrs, 'tags'),
-        'tenancy': raw_attrs['tenancy'],
-        'vpc_security_group_ids': parse_list(raw_attrs,
-                                             'vpc_security_group_ids'),
-        # ansible-specific
-        'ansible_ssh_port': 22,
-        'ansible_ssh_user': raw_attrs['tags.sshUser'],
-        'ansible_ssh_host': raw_attrs['public_ip'],
-        # generic
-        'public_ipv4': raw_attrs['public_ip'],
-        'private_ipv4': raw_attrs['private_ip'],
-        'provider': 'aws',
-    }
-
-    # attrs specific to microservices-infrastructure
-    attrs.update({
-        'consul_dc': _clean_dc(attrs['tags'].get('dc', module_name)),
-        'role': attrs['tags'].get('role', 'none')
-    })
-
-    # groups specific to microservices-infrastructure
-    groups.extend(['aws_ami=' + attrs['ami'],
-                   'aws_az=' + attrs['availability_zone'],
-                   'aws_key_name=' + attrs['key_name'],
-                   'aws_tenancy=' + attrs['tenancy']])
-    groups.extend('aws_tag_%s=%s' % item for item in attrs['tags'].items())
-    groups.extend('aws_vpc_security_group=' + group
-                  for group in attrs['vpc_security_group_ids'])
-    groups.extend('aws_subnet_%s=%s' % subnet
-                  for subnet in attrs['subnet'].items())
-
-    # groups specific to microservices-infrastructure
-    groups.append('role=' + attrs['role'])
-    groups.append('dc=' + attrs['consul_dc'])
-
-    return name, attrs, groups
-
-
-@parses('google_compute_instance')
-@calculate_mi_vars
-def gce_host(resource, module_name):
-    name = resource['primary']['id']
-    raw_attrs = resource['primary']['attributes']
-    groups = []
-
-    # network interfaces
-    interfaces = parse_attr_list(raw_attrs, 'network_interface')
-    for interface in interfaces:
-        interface['access_config'] = parse_attr_list(interface,
-                                                     'access_config')
-        for key in interface.keys():
-            if '.' in key:
-                del interface[key]
-
-    # general attrs
-    attrs = {
-        'can_ip_forward': raw_attrs['can_ip_forward'] == 'true',
-        'disks': parse_attr_list(raw_attrs, 'disk'),
-        'machine_type': raw_attrs['machine_type'],
-        'metadata': parse_dict(raw_attrs, 'metadata'),
-        'network': parse_attr_list(raw_attrs, 'network'),
-        'network_interface': interfaces,
-        'self_link': raw_attrs['self_link'],
-        'service_account': parse_attr_list(raw_attrs, 'service_account'),
-        'tags': parse_list(raw_attrs, 'tags'),
-        'zone': raw_attrs['zone'],
-        # ansible
-        'ansible_ssh_port': 22,
-        'ansible_ssh_user': raw_attrs.get('metadata.ssh_user', 'centos'),
-        'provider': 'gce',
-    }
-
-    # attrs specific to microservices-infrastructure
-    attrs.update({
-        'consul_dc': _clean_dc(attrs['metadata'].get('dc', module_name)),
-        'role': attrs['metadata'].get('role', 'none'),
-    })
-
-    try:
-        attrs.update({
-            'ansible_ssh_host': interfaces[0]['access_config'][0]['nat_ip'],
-            'public_ipv4': interfaces[0]['access_config'][0]['nat_ip'],
-            'private_ipv4': interfaces[0]['address'],
-            'publicly_routable': True,
-        })
-    except (KeyError, ValueError):
-        attrs.update({'ansible_ssh_host': '', 'publicly_routable': False})
-
-    # add groups based on attrs
-    groups.extend('gce_image=' + disk['image'] for disk in attrs['disks'])
-    groups.append('gce_machine_type=' + attrs['machine_type'])
-    groups.extend('gce_metadata_%s=%s' % (key, value)
-                  for (key, value) in attrs['metadata'].items()
-                  if key not in set(['sshKeys']))
-    groups.extend('gce_tag=' + tag for tag in attrs['tags'])
-    groups.append('gce_zone=' + attrs['zone'])
-
-    if attrs['can_ip_forward']:
-        groups.append('gce_ip_forward')
-    if attrs['publicly_routable']:
-        groups.append('gce_publicly_routable')
-
-    # groups specific to microservices-infrastructure
-    groups.append('role=' + attrs['metadata'].get('role', 'none'))
-    groups.append('dc=' + attrs['consul_dc'])
-
-    return name, attrs, groups
-
-
-@parses('vsphere_virtual_machine')
-@calculate_mi_vars
-def vsphere_host(resource, module_name):
-    raw_attrs = resource['primary']['attributes']
-    name = raw_attrs['name']
-    groups = []
-
-    attrs = {
-        'id': raw_attrs['id'],
-        'ip_address': raw_attrs['ip_address'],
-        'metadata': parse_dict(raw_attrs, 'configuration_parameters'),
-        'ansible_ssh_port': 22,
-        'provider': 'vsphere',
-    }
-
-    try:
-        attrs.update({
-            'ansible_ssh_host': raw_attrs['ip_address'],
-        })
-    except (KeyError, ValueError):
-        attrs.update({'ansible_ssh_host': '', })
-
-    attrs.update({
-        'consul_dc': _clean_dc(attrs['metadata'].get('consul_dc', module_name)),
-        'role': attrs['metadata'].get('role', 'none'),
-        'ansible_ssh_user': attrs['metadata'].get('ssh_user', 'centos'),
-    })
-
-    groups.append('role=' + attrs['role'])
-    groups.append('dc=' + attrs['consul_dc'])
-
-    return name, attrs, groups
-
-
-## QUERY TYPES
+# QUERY TYPES
 def query_host(hosts, target):
     for name, attrs, _ in hosts:
         if name == target:
@@ -519,8 +220,9 @@ def main():
                         action='store_true',
                         help='with --list, exclude hostvars')
     default_root = os.environ.get('TERRAFORM_STATE_ROOT',
-                                  os.path.abspath(os.path.join(os.path.dirname(__file__),
-                                                               '..', '..', )))
+                                  os.path.abspath(os.path.join(
+                                      os.path.dirname(__file__),
+                                      '..', '..', )))
     parser.add_argument('--root',
                         default=default_root,
                         help='custom root to search for `.tfstate`s in')
