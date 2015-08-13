@@ -49,7 +49,7 @@ resource "openstack_compute_instance_v2" "node" {
   network               = { uuid = "${ openstack_networking_network_v2.ms-network.id }" }
   metadata              = {
                             dc = "${var.datacenter}"
-                            role = "worker"
+                            role = "node"
                             ssh_user = "${ var.ssh_user }"
                           }
   count                 = "${ var.node_count }"
