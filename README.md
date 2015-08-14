@@ -1,4 +1,4 @@
-## Ansible playbook that provisions k8s cluster with flannel network overlay.
+## Install and configure Kubernetes on OpenStack using ansible and terraform
 
 ### Main goals
 
@@ -10,34 +10,84 @@
  - Configure Kubernetes minion
  - Install kube-dns service discovery and DNS resolution pod
 
-### Prepare environment
+### Provision Openstack environment
 
-There is 3 main roles:
- - Etcd server
- - Kubernetes master
- - Kubernetes node (minion)
+- Install [terraform](http://www.terraform.io/downloads.html)
 
-You can safely combine `etcd` and `kubernetes master` on one host, eventually you even can run `kubernetes minion` on that host also.
+        # change 0.6.3 to the desired version
+        wget -q -O terraform.zip https://dl.bintray.com/mitchellh/terraform/terraform_0.6.3_linux_amd64.zip
+        unzip terraform.zip -d /usr/local/bin
 
-For this setup you will need 1 host that would be `kubernetes master` and some amount of hosts as `minions`.
-I suggest you using at least 2 minion nodes to test flannel or any other networking for kubernetes.
+- Install python pip
 
-If you already have prepared hosts you can provide simple ansible inventory (sample is in root of project) and update group variables in `group_vars/all.yml` if it's needed.
+        curl -SL 'https://bootstrap.pypa.io/get-pip.py' | python2
+        pip install --no-cache-dir --upgrade pip
 
-Also you can provision hosts on OpenStack using Terraform. Examples provided in `terraform/` folder. Copy sample `.tf` file in project home, fill in all fields and provide number of nodes ( e.g. 1 control and 3 worker nodes ).
+- Download Openstack RC file from Openstack Project (Access & Security --> API Access)
+
+        source openrc.sh
+        # prompted for your password for the Openstack Project
+
+- Provide configurations for Openstack
+
+        cp terraform/openstack.sample.tf openstack.tf
+
+        # edit the openstack.tf file by providing the following
+        - location of ssh public key and a unique name
+        - VM Flavor for Master node
+        - VM Flavor for Worker node
+        - Network ID
+        - OS Image Name (centos 7.x)
+        - Number of worker nodes
+        - size (GB) of storage for kubernetes master to use
+        - auth_url (found within openrc.sh)
+        - tenant_id (found within openrc.sh)
+        - tenant_name (found within openrc.sh)
+
+- Provision Environment
+
+        terraform get
+        terraform apply
+
+- Verify SSH access to the hosts
+
+        ansible -m ping all
+
 
 ### Firewall notice
-If you running on some cloud provider make sure that firewall configuration permits traffic beetween nodes.
+
+If you are running on a cloud provider make sure that firewall configuration permits traffic between nodes. If you used terraform to provision environment then a security group has already been created for you.
 
 Port list on roles:
 TBD
 
 
+### Prepare environment
+
+There is 3 main roles:
+ - etcd server
+ - kubernetes master
+ - kubernetes node (minion)
+
+You can safely combine `etcd` and `kubernetes master` on one host, eventually you can run `kubernetes minion` on that host also.
+
+For this setup you will need 1 host that would be `kubernetes master` and 2 or more hosts as `minions`.
+At least 2 minion nodes are needed to use flannel or any other networking for kubernetes.
+
+If you already have prepared hosts you can provide simple ansible inventory (sample is in root of project).
+
+
 ### Run ansible playbooks
 
-This guide not provides any information like "Getting started with Ansible". So make sure that ansible can rearch your hosts. At least you can "ping" them like `ansible -m ping all`
+Use [Getting started with Ansible](http://docs.ansible.com/ansible/intro_getting_started.html) if you are not familiar with ansible.
 
-First of all look into `group_vars/all.yml` and make changes if needed.
+Verify that ansible can reach your hosts.
+
+```
+ansible -m ping all
+```
+
+Validate the global configurations found in `group_vars/all.yml` and update as needed.
 
 To run ansible on hosts you prepared run:
 
@@ -45,16 +95,20 @@ To run ansible on hosts you prepared run:
 ansible-playbook -i inventory setup.yml
 ```
 
-If you used Terraform to provision your hosts you can use script that provides dynamic inventory from `.tfstate`
+If you used Terraform to provision your hosts, a plugin is provided that dynamically extracts the inventory from `.tfstate` file.
 
 ```
-ansible-playbook -i plugins/inventory/terraform.py setup.yml
+ansible-playbook setup.yml
 ```
-Then if needed you can get list of hosts with `terraform.py` and put them directly in your `/etc/hosts` file.
+
+The same plugin can be used to either print out a lists of hosts or to add those hosts to your local `/etc/hosts` file so that you can reference the hosts by name.
+
+The following command will append the hosts to your `/etc/hosts` file.
 
 ```
 ./plugins/inventory/terraform.py --hostfile >> /etc/hosts
 ```
+
 
 ### Check cluster deployment
 
@@ -68,11 +122,11 @@ Then if needed you can get list of hosts with `terraform.py` and put them direct
 
         kubectl get rc,svc,po --all-namespaces -o wide
 
-- Check status of Kubernete processes
+- Check status of Kubernetes processes
 
         sudo systemctl status etcd kube-apiserver kube-controller-manager kube-scheduler -l
 
-- View logs of Kubernete processes
+- View logs of Kubernetes processes
 
         sudo journalctl -u etcd
         sudo journalctl -u kube-apiserver
@@ -110,11 +164,11 @@ Then if needed you can get list of hosts with `terraform.py` and put them direct
 
 #### Validate Nodes
 
-- Check status of Kubernete processes
+- Check status of Kubernetes processes
 
         sudo systemctl status kubelet kube-proxy flanneld docker -l
 
-- View logs of Kubernete processes
+- View logs of Kubernetes processes
 
         sudo journalctl -u kubelet
         sudo journalctl -u kube-proxy
