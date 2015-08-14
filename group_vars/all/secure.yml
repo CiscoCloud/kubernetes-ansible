@@ -1,0 +1,12 @@
+# Leverage ansible vault and encrypt the file within your project
+# http://docs.ansible.com/ansible/playbooks_vault.html
+
+# Users to create for basic auth in Kubernetes API via HTTP
+kube_users:
+  kube:
+    pass: changeme
+    role: admin
+  root:
+    pass: changeme
+    role: admin
+
