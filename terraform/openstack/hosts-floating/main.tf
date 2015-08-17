@@ -1,7 +1,4 @@
-variable auth_url { }
 variable datacenter { default = "openstack" }
-variable tenant_id { }
-variable tenant_name { }
 variable master_flavor { }
 variable node_flavor { }
 variable keypair_name { }
@@ -16,12 +13,6 @@ variable ip_version { default = "4" }
 variable short_name { default = "k8s" }
 variable long_name { default = "kubernertes" }
 variable ssh_user { default = "centos" }
-
-provider "openstack" {
-  auth_url	= "${ var.auth_url }"
-  tenant_id	= "${ var.tenant_id }"
-  tenant_name	= "${ var.tenant_name }"
-}
 
 resource "openstack_compute_instance_v2" "master" {
   floating_ip = "${ element(openstack_compute_floatingip_v2.ms-master-floatip.*.address, count.index) }"

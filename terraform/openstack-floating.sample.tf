@@ -1,26 +1,27 @@
+variable auth_url {}
+variable tenant_id {}
+variable tenant_name {}
+
+provider "openstack" {
+  auth_url = "${ var.auth_url }"
+  tenant_id = "${ var.tenant_id }"
+  tenant_name = "${ var.tenant_name }"
+}
+
 module "dc2-keypair" {
   source = "./terraform/openstack/keypair"
-  auth_url = ""
-  tenant_id = ""
-  tenant_name = ""
   public_key = ""
   keypair_name = ""
 }
 
 module "dc2-secgroup" {
   source = "./terraform/openstack/secgroup"
-  auth_url = ""
-  tenant_id = ""
-  tenant_name = ""
   cluster_name = "k8s-cluster"
 }
 
 module "dc2-hosts-floating" {
   source = "./terraform/openstack/hosts-floating"
-  auth_url = ""
   datacenter = "dc2"
-  tenant_id = ""
-  tenant_name = ""
   master_flavor = ""
   node_flavor = ""
   image_name = ""

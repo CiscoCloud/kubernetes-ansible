@@ -1,13 +1,4 @@
 variable cluster_name { }
-variable auth_url { }
-variable tenant_id { }
-variable tenant_name { }
-
-provider "openstack" {
-    auth_url = "${ var.auth_url }"
-    tenant_id = "${ var.tenant_id }"
-    tenant_name = "${ var.tenant_name }"
-}
 
 resource "openstack_compute_secgroup_v2" "cluster" {
     name = "${ var.cluster_name }"
