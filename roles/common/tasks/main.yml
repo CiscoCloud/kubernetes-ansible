@@ -37,6 +37,18 @@
   tags:
     - common
 
+- name: clean hosts file
+  sudo: yes
+  lineinfile:
+    dest: /etc/hosts
+    regexp: "{{ item }}"
+    state: absent
+  with_items:
+    - '^127\.0\.0\.1(\s+){{ inventory_hostname }}.*'
+    - '^::1(\s+){{ inventory_hostname }}.*'
+  tags:
+    - common
+
 - name: enable EPEL repo
   sudo: yes
   yum:
