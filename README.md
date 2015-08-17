@@ -2,13 +2,26 @@
 
 ### Main goals
 
- - Install etcd server
- - Install docker
- - Install flanneld and put config in etcd
- - Install Kubernetes package from CentOS virt7-docker-common-candidate repo
- - Configure Kubernetes master
- - Configure Kubernetes minion
- - Install kube-dns service discovery and DNS resolution pod
+- Install etcd server
+- Install docker
+- Install flanneld and put config in etcd
+- Install Kubernetes package from CentOS virt7-docker-common-candidate repo
+- Configure Kubernetes master
+- Configure Kubernetes minion
+- Install kube-dns service discovery and DNS resolution pod
+
+
+### Available Addons
+
+- DNS for Service Discovery
+- Kubernetes UI
+- Logging Service for containers
+
+#### NOTE
+
+Each addon is enabled by default but can be disabled by changing the options within `group_vars/all.yml`
+All of the addons depend on the DNS addon for Service Discovery.
+
 
 ### Provision Openstack environment
 
@@ -31,6 +44,7 @@
 - Provide configurations for Openstack
 
         cp terraform/openstack.sample.tf openstack.tf
+        cp terraform/terraform.tfvars terraform.tfvars
 
         # edit the openstack.tf file by providing the following
         - location of ssh public key and a unique name
@@ -40,6 +54,8 @@
         - OS Image Name (centos 7.x)
         - Number of worker nodes
         - size (GB) of storage for kubernetes master to use
+
+        # edit the terraform.tfvars file by providing the following
         - auth_url (found within openrc.sh)
         - tenant_id (found within openrc.sh)
         - tenant_name (found within openrc.sh)
