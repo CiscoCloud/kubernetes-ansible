@@ -49,3 +49,6 @@ dns_setup: true
 
 # Number of replicas of DNS instances started on kubernetes
 dns_replicas: 1
+
+# Set to 'false' to disable default Kubernetes UI setup
+enable_ui: true
