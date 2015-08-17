@@ -8,8 +8,11 @@ module "dc2-keypair" {
 }
 
 module "dc2-secgroup" {
-    source = "./terraform/openstack/secgroup"
-    cluster_name = "k8s-cluster"
+  source = "./terraform/openstack/secgroup"
+  auth_url = ""
+  tenant_id = ""
+  tenant_name = ""
+  cluster_name = "k8s-cluster"
 }
 
 module "dc2-hosts" {
