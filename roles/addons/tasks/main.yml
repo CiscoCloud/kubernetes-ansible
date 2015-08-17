@@ -36,3 +36,6 @@
 
 - include: kube-ui.yml
   when: enable_ui
+
+- include: logging.yml
+  when: enable_logging
