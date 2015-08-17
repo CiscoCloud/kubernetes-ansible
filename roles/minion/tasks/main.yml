@@ -94,3 +94,13 @@
     state: started
   tags:
     - minion
+
+- name: addons | Logging | Create Fluentd pod
+  sudo: yes
+  copy:
+    src: fluentd-es.yaml
+    dest: "{{ kube_manifest_dir }}/fluentd-es.yaml"
+  when: enable_logging
+  tags:
+    - addons
+    - logging
