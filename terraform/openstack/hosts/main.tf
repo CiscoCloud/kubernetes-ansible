@@ -1,4 +1,3 @@
-variable auth_url { }
 variable master_count {}
 variable master_flavor { }
 variable datacenter { default = "openstack" }
@@ -12,14 +11,6 @@ variable node_flavor { }
 variable security_groups {  }
 variable short_name { default = "k8s" }
 variable ssh_user { default = "centos" }
-variable tenant_id { }
-variable tenant_name { }
-
-provider "openstack" {
-  auth_url = "${ var.auth_url }"
-  tenant_id	= "${ var.tenant_id }"
-  tenant_name	= "${ var.tenant_name }"
-}
 
 resource "openstack_blockstorage_volume_v1" "k8s-glusterfs" {
   name = "${ var.short_name }-master-glusterfs-${format("%02d", count.index+1) }"
