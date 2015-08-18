@@ -1,7 +1,7 @@
-[role=control]
+[role=master]
 k8s-master	ansible_ssh_host=172.16.0.10
 
-[role=worker]
+[role=node]
 k8s-node-01	ansible_ssh_host=172.16.0.11
 k8s-node-02	ansible_ssh_host=172.16.0.12
 k8s-node-03	ansible_ssh_host=172.16.0.13
