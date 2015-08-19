@@ -1,0 +1,98 @@
+---
+- name: install dnsmasq and bind-utils
+  sudo: yes
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - dnsmasq
+    - bind-utils
+  when: inventory_hostname in groups[master_group_name]
+  tags:
+    - dnsmasq
+
+- name: install networkmanager
+  sudo: yes
+  yum:
+    name: NetworkManager
+    state: latest
+  tags:
+    - dnsmasq
+
+- name: collect nameservers
+  sudo: yes
+  shell: "cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2"
+  register: nameservers_output
+  tags:
+    - dnsmasq
+
+- name: collect dns search list
+  sudo: yes
+  shell: "cat /etc/resolv.conf | grep -i '^search' | cut -d ' ' -f2- | tr ' ' '\n'"
+  register: dns_search_list_output
+  tags:
+    - dnsmasq
+
+- name: set nameservers
+  set_fact:
+    nameservers_list: "{{ nameservers_output.stdout_lines }}"
+  tags:
+    - dnsmasq
+
+- name: set dns search list
+  set_fact:
+    domain_search_list: "{{ dns_search_list_output.stdout_lines }}"
+  tags:
+    - dnsmasq
+
+- name: ensure dnsmasq.d directory exists
+  sudo: yes
+  file:
+    path: /etc/NetworkManager/dnsmasq.d
+    state: directory
+  when: inventory_hostname in groups[master_group_name]
+  tags:
+    - dnsmasq
+
+- name: configure dnsmasq
+  sudo: yes
+  template:
+    src: 01-kube-dns.conf.j2
+    dest: /etc/dnsmasq.d/01-kube-dns.conf
+    mode: 755
+  notify:
+    - restart dnsmasq
+  when: inventory_hostname in groups[master_group_name]
+  tags:
+    - dnsmasq
+
+- name: enable dnsmasq
+  sudo: yes
+  service:
+    name: dnsmasq
+    state: started
+    enabled: yes
+  when: inventory_hostname in groups[master_group_name]
+  tags:
+    - dnsmasq
+
+- name: disable NetworkManager DNS config
+  sudo: yes
+  ini_file: 
+    dest: /etc/NetworkManager/NetworkManager.conf
+    section: main
+    option: dns
+    value: none
+  notify:
+    - restart networkmanager
+  tags: 
+    - dnsmasq
+
+- name: update resolv.conf with new DNS setup
+  sudo: yes
+  template:
+    src: resolv.conf.j2
+    dest: /etc/resolv.conf
+    mode: 644
+  tags:
+    - dnsmasq

@@ -13,6 +13,7 @@
     - flannel
     - master
     - addons
+    - dnsmasq
 
 # provide the execution plane
 - hosts: role=node
@@ -21,3 +22,4 @@
     - docker
     - flannel
     - minion
+    - dnsmasq
