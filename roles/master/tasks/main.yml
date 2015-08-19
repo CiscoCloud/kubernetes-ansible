@@ -2,18 +2,7 @@
 - name: install kubernetes master
   sudo: yes
   yum:
-    pkg=kubernetes-master
-    state=latest
-    enablerepo=virt7-docker-common-candidate
-  notify:
-    - restart daemons
-  tags:
-    - master
-
-- name: install kubernetes node
-  sudo: yes
-  yum:
-    pkg=kubernetes-node
+    pkg=kubernetes
     state=latest
     enablerepo=virt7-docker-common-candidate
   notify:
