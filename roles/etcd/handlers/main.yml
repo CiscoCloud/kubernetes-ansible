@@ -1,12 +1,7 @@
 ---
-- name: reload systemd
-  sudo: yes
-  shell: systemctl daemon-reload
-  when: etcd_peers.changed
-
 - name: restart etcd
   sudo: yes
   service:
     name: etcd
     state: restarted
-  when: etcd_peers.changed
+  when: etcd_started.changed == false
