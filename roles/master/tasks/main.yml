@@ -10,6 +10,17 @@
   tags:
     - master
 
+- name: install kubernetes node
+  sudo: yes
+  yum:
+    pkg=kubernetes-node
+    state=latest
+    enablerepo=virt7-docker-common-candidate
+  notify:
+    - restart daemons
+  tags:
+    - master
+
 - name: get the node token values from token files
   sudo: yes
   slurp:
@@ -18,6 +29,7 @@
     - "system:controller_manager"
     - "system:scheduler"
     - "system:kubectl"
+    - "system:proxy"
   register: tokens
   delegate_to: "{{ groups[master_group_name][0] }}"
   tags:
@@ -28,6 +40,7 @@
     controller_manager_token: "{{ tokens.results[0].content|b64decode }}"
     scheduler_token: "{{ tokens.results[1].content|b64decode }}"
     kubectl_token: "{{ tokens.results[2].content|b64decode }}"
+    proxy_token: "{{ tokens.results[3].content|b64decode }}"
   tags:
     - master
 
@@ -74,6 +87,20 @@
 - name: write the kubecfg (auth) file for kubectl
   sudo: yes
   template: src=kubectl.kubeconfig.j2 dest={{ kube_config_dir }}/kubectl.kubeconfig
+  tags:
+    - master
+
+- name: write the config files for proxy
+  sudo: yes
+  template: src=proxy.j2 dest={{ kube_config_dir }}/proxy
+  notify:
+    - restart daemons
+  tags:
+    - master
+
+- name: write the kubecfg (auth) file for proxy
+  sudo: yes
+  template: src=proxy.kubeconfig.j2 dest={{ kube_config_dir }}/proxy.kubeconfig
   tags:
     - master
 
