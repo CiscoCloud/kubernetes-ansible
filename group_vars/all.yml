@@ -53,5 +53,8 @@ dns_replicas: 1
 # Set to 'false' to disable default Kubernetes UI setup
 enable_ui: true
 
-# Set fo 'false' to disable default Elasticsearch + Kibana logging setup
+# Set to 'false' to disable default Elasticsearch + Kibana logging setup
 enable_logging: true
+
+# Set to "false' to disable default Monitoring (cAdvisor + heapster + influxdb + grafana)
+enable_monitoring: true
