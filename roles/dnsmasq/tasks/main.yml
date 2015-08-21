@@ -1,0 +1,62 @@
+---
+- name: install dnsmasq and bind-utils
+  sudo: yes
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - dnsmasq
+    - bind-utils
+  when: inventory_hostname in groups[master_group_name]
+  tags:
+    - dnsmasq
+
+- name: ensure dnsmasq.d directory exists
+  sudo: yes
+  file:
+    path: /etc/dnsmasq.d
+    state: directory
+  when: inventory_hostname in groups[master_group_name]
+  tags:
+    - dnsmasq
+
+- name: configure dnsmasq
+  sudo: yes
+  template:
+    src: 01-kube-dns.conf.j2
+    dest: /etc/dnsmasq.d/01-kube-dns.conf
+    mode: 755
+  notify:
+    - restart dnsmasq
+  when: inventory_hostname in groups[master_group_name]
+  tags:
+    - dnsmasq
+
+- name: enable dnsmasq
+  sudo: yes
+  service:
+    name: dnsmasq
+    state: started
+    enabled: yes
+  when: inventory_hostname in groups[master_group_name]
+  tags:
+    - dnsmasq
+
+- name: update resolv.conf with new DNS setup
+  sudo: yes
+  template:
+    src: resolv.conf.j2
+    dest: /etc/resolv.conf
+    mode: 644
+  tags:
+    - dnsmasq
+
+- name: disable resolv.conf modification by dhclient
+  sudo: yes
+  lineinfile: 
+    dest: "/etc/sysconfig/network-scripts/ifcfg-{{ ansible_default_ipv4.interface }}"
+    state: present
+    regexp: '^PEERDNS'
+    line: 'PEERDNS="no"'
+  tags:
+    - dnsmasq

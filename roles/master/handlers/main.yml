@@ -6,6 +6,7 @@
     - restart apiserver
     - restart controller-manager
     - restart scheduler
+    - restart proxy
 
 - name: restart apiserver
   sudo: yes
@@ -23,4 +24,10 @@
   sudo: yes
   service:
     name: kube-scheduler
+    state: restarted
+
+- name: restart proxy
+  sudo: yes
+  service:
+    name: kube-proxy
     state: restarted
