@@ -131,3 +131,12 @@
     state: started
   tags:
     - master
+
+- name: Enable kube-proxy
+  sudo: yes
+  service:
+    name: kube-proxy
+    enabled: yes
+    state: started
+  tags:
+    - master
