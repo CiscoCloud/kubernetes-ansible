@@ -1,18 +1,10 @@
 ---
-- name: create flannel config json
-  run_once: true
-  sudo: yes
-  template:
-    src: flannel.json.j2
-    dest: /tmp/flannel.json
-  tags:
-    - flannel
-
 - name: configure flannel in etcd
   run_once: true
   sudo: yes
-  command: 'curl -L {{ etcd_url_scheme }}://{{ groups[etcd_group_name][0] }}:{{ etcd_client_port }}/v2/keys/{{ dns_domain }}/network/config -XPUT --data-urlencode value@/tmp/flannel.json'
+  command: 'etcdctl --no-sync --peers={{ etcd_url_scheme }}://{{ groups[etcd_group_name][0] }}:{{ etcd_client_port }} set /{{ dns_domain }}/network/config ''{ "Network": "{{ overlay_network_subnet }}/{{ overlay_network_prefix }}", "SubnetLen": {{ overlay_network_host_prefix }}, "Backend": { "Type": "vxlan" } }'''
   changed_when: false
+  delegate_to: "{{ groups[etcd_group_name][0] }}"
   tags:
     - flannel
 
