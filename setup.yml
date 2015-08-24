@@ -8,7 +8,10 @@
 # provide the control plane
 - hosts: role=master
   gather_facts: no
+  vars:
+    glusterfs_mode: server
   roles:
+    - glusterfs
     - etcd
     - flannel
     - master
@@ -18,7 +21,10 @@
 # provide the execution plane
 - hosts: role=node
   gather_facts: no
+  vars:
+    glusterfs_mode: client
   roles:
+    - glusterfs
     - docker
     - flannel
     - minion

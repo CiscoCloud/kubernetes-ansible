@@ -27,6 +27,7 @@ module "dc2-hosts-floating" {
   image_name = ""
   keypair_name = "${ module.dc2-keypair.keypair_name }"
   security_groups = "${ module.dc2-secgroup.cluster_name }"
+  glusterfs_volume_size = 100
   master_count = 1
   node_count = 2
   floating_pool = ""
