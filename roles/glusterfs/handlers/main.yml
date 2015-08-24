@@ -1,0 +1,8 @@
+---
+- name: reload glusterfs
+  sudo: yes
+  command: "{{ item }}"
+  with_items:
+    - systemctl daemon-reload
+    - systemctl restart glusterd
+    - systemctl restart glusterfsd
