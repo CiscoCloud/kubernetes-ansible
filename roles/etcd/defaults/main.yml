@@ -1,4 +1,5 @@
 ---
+ectd_version: 2.0.13
 etcd_client_port: 2379
 etcd_peer_port: 2380
 etcd_url_scheme: http

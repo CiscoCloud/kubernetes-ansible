@@ -3,10 +3,10 @@
   sudo: yes
   yum:
     name: "{{ item }}"
-    state: latest
+    state: present
   with_items:
-    - dnsmasq
-    - bind-utils
+    - "dnsmasq-{{ dnsmasq_version }}"
+    - "bind-utils-{{ bind_utils_version }}"
   when: inventory_hostname in groups[master_group_name]
   tags:
     - dnsmasq

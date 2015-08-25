@@ -17,9 +17,8 @@
 - name: Install kubernetes node
   sudo: yes
   yum:
-    pkg=kubernetes-node
-    state=latest
-    enablerepo=virt7-docker-common-candidate
+    pkg="kubernetes-node-{{ kube_version }}"
+    state=present
   notify:
     - restart daemons
   tags:

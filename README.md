@@ -5,7 +5,7 @@
 - Install etcd server
 - Install docker
 - Install flanneld and put config in etcd
-- Install Kubernetes package from CentOS virt7-docker-common-candidate repo
+- Install Kubernetes package
 - Configure Kubernetes master
 - Configure Kubernetes minion
 - Install kube-dns service discovery and DNS resolution pod

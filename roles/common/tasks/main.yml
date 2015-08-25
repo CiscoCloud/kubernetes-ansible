@@ -56,9 +56,3 @@
     state: latest
   tags:
     - common
-
-- name: install docker-common-candidate repo
-  sudo: yes
-  copy:
-    src=virt7-docker-common-candidate.repo
-    dest=/etc/yum.repos.d/virt7-docker-common-candidate.repo

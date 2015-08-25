@@ -11,9 +11,8 @@
 - name: install flannel
   sudo: yes
   yum:
-    pkg=flannel
-    state=latest
-    enablerepo=virt7-docker-common-candidate
+    pkg="flannel-{{ flannel_version }}"
+    state=present
   tags:
     - flannel
 
