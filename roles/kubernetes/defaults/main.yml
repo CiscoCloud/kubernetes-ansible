@@ -1,5 +1,5 @@
 # The version of software to install for Kubernetes
-kube_version: 1.0.0-0.8.gitb2dafda
+kube_version: 1.0.0
 
 # This directory is where all the additional scripts go
 # that Kubernetes normally puts in /srv/kubernetes.

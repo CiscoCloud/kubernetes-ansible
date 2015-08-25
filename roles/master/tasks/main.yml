@@ -2,7 +2,7 @@
 - name: install kubernetes master
   sudo: yes
   yum:
-    pkg="kubernetes-{{ kube_version }}.el7.x86_64.rpm"
+    pkg="kubernetes-{{ kube_version }}"
     state=present
   notify:
     - restart daemons
@@ -15,7 +15,7 @@
     capability: cap_net_bind_service+ep
     path: /usr/bin/kube-apiserver
     state: present
-  when: "{{ kube_master_port }}" < 1024
+  when: "{{ kube_master_port | int  }} < 1024"
   notify:
     - restart daemons
   tags:

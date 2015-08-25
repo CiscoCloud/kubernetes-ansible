@@ -1,3 +1,3 @@
 ---
-dnsmasq_version: 2.66-14
-bind_utils_version: 9.9.4-18
+dnsmasq_version: 2.66
+bind_utils_version: 9.9.4

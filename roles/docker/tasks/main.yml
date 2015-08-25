@@ -2,7 +2,7 @@
 - name: install docker
   sudo: yes
   yum:
-    name: "docker-{{ docker_version }}.el7.centos.x86_64.rpm"
+    name: "docker-{{ docker_version }}"
     state: present
   tags:
     - docker

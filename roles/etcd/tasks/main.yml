@@ -2,7 +2,7 @@
 - name: Install etcd package
   sudo: yes
   yum:
-    pkg: "etcd-{{ ectd_version }}.el7.x86_64.rpm"
+    pkg: "etcd-{{ ectd_version }}"
     state: present
   when: inventory_hostname in groups[etcd_group_name]
   notify:

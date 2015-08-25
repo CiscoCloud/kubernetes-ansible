@@ -5,8 +5,8 @@
     name: "{{ item }}"
     state: latest
   with_items:
-    - "dnsmasq-{{ dnsmasq_version }}.el7_1.x86_64.rpm"
-    - "bind-utils-{{ bind_utils_version }}.el7_1.3.x86_64.rpm"
+    - "dnsmasq-{{ dnsmasq_version }}"
+    - "bind-utils-{{ bind_utils_version }}"
   when: inventory_hostname in groups[master_group_name]
   tags:
     - dnsmasq
