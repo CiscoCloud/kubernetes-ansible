@@ -2,9 +2,20 @@
 - name: install kubernetes master
   sudo: yes
   yum:
-    pkg=kubernetes
-    state=latest
-    enablerepo=virt7-docker-common-candidate
+    pkg="kubernetes-{{ kube_version }}.el7.x86_64.rpm"
+    state=present
+  notify:
+    - restart daemons
+  tags:
+    - master
+
+- name: enable capability for kube-apiserver to bind to port below 1024
+  sudo: yes
+  capabilities:
+    capability: cap_net_bind_service+ep
+    path: /usr/bin/kube-apiserver
+    state: present
+  when: "{{ kube_master_port }}" < 1024
   notify:
     - restart daemons
   tags:

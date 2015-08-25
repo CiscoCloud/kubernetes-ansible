@@ -1,17 +1,9 @@
 ---
-# - name: install latest device-mapper-libs
-#   sudo: yes
-#   yum:
-#     name: device-mapper-libs
-#     state: latest
-#   tags:
-#     - docker
-
 - name: install docker
   sudo: yes
   yum:
-    name: docker
-    state: latest
+    name: "docker-{{ docker_version }}.el7.centos.x86_64.rpm"
+    state: present
   tags:
     - docker
 
