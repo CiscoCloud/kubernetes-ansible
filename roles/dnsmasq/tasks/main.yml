@@ -3,7 +3,7 @@
   sudo: yes
   yum:
     name: "{{ item }}"
-    state: latest
+    state: present
   with_items:
     - "dnsmasq-{{ dnsmasq_version }}"
     - "bind-utils-{{ bind_utils_version }}"
