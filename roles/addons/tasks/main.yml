@@ -8,7 +8,7 @@
 - name: Create kube-system namespace
   sudo: yes
   kube:
-    resource: ns
+    resource: namespace
     name: kube-system
     filename: "{{ kube_manifest_dir }}/kube-system.yaml"
     state: present
