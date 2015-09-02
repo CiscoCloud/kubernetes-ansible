@@ -1,13 +1,9 @@
 ---
-- name: install kubernetes master
-  sudo: yes
-  yum:
-    pkg="kubernetes-{{ kube_version }}"
-    state=present
-  notify:
-    - restart daemons
-  tags:
-    - master
+- include: stable.yml
+  when: kube_build == "stable"
+
+- include: testing.yml
+  when: kube_build == "testing"
 
 - name: enable capability for kube-apiserver to bind to port below 1024
   sudo: yes

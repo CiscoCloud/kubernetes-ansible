@@ -1,4 +1,5 @@
-# The version of software to install for Kubernetes
+# The version of software to install for Kubernetes.
+# When testing repo is used, state is "latest", so this has no effect.
 kube_version: 1.0.0
 
 # This directory is where all the additional scripts go
