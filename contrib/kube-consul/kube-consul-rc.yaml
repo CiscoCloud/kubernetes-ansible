@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: kube-consul-v1
+  namespace: kube-system
+  labels:
+    k8s-app: kube-consul
+    version: v1
+    kubernetes.io/cluster-service: "true"
+spec:
+  replicas: 1
+  selector:
+    k8s-app: kube-consul
+    version: v1
+  template:
+    metadata:
+      labels:
+        k8s-app: kube-consul
+        version: v1
+        kubernetes.io/cluster-service: "true"
+    spec:
+      containers:
+      - name: consul-agent
+        image: ldejager/consul-agent
+        resources:
+          limits:
+            cpu: 100m
+            memory: 50Mi
+        command:
+      - name: kube2consul
+        image: ldejager/kube2consul
+        resources:
+          limits:
+            cpu: 100m
+            memory: 50Mi
+        args:
+        ports:
+        - containerPort: 53
+          name: dns
+          protocol: UDP
+        - containerPort: 53
+          name: dns-tcp
+          protocol: TCP
+        - containerPort: 8600
+          name: cdns-tcp
+          protocol: TCP
+        - containerPort: 8600
+          name: cdns-udp
+          protocol: UDP
+        - containerPort: 8301
+          name: serflan-tcp
+          protocol: TCP
+        - containerPort: 8301
+          name: serflan-udp
+          protocol: UDP
+        - containerPort: 8400
+          name: rpc-tcp
+          protocol: TCP
+        - containerPort: 8302
+          name: serfwan-tcp
+          protocol: TCP
+        - containerPort: 8302
+          name: serfwan-udp
+          protocol: UDP
+        - containerPort: 8300
+          name: server-tcp
+          protocol: TCP
+        - containerPort: 8500
+          name: http-api
+          protocol: TCP
+      dnsPolicy: Default  # Don't use cluster DNS.
