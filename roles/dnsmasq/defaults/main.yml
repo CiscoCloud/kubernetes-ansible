@@ -1,3 +1,6 @@
 ---
 dnsmasq_version: 2.66
 bind_utils_version: 9.9.4
+
+dns_domain: "{{ cluster_name }}"
+dns_server: "{{ kube_service_addresses|ipaddr('net')|ipaddr(253)|ipaddr('address') }}"
