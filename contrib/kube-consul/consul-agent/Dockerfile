@@ -1,4 +1,4 @@
-FROM ldejager/consul:latest
+FROM ciscocloud/kubernetes-consul:latest
 ADD ./config /opt/consul/config/
 ADD https://dl.bintray.com/mitchellh/consul/0.5.2_web_ui.zip /tmp/webui.zip
 RUN cd /tmp && unzip webui.zip && mv dist /opt/consul/ui && rm webui.zip
