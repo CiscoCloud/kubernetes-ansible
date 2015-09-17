@@ -58,6 +58,7 @@ The implementation currently consists of three containers running in a POD. The 
     2015/09/02 14:33:41 [INFO] agent: Synced service 'kube-consul'
     ```
 
+
 Below is a description of an existing POD used for testing.
 
 ```shell
@@ -105,11 +106,53 @@ Conditions:
 No events.
 ```
 
+## Validation
+
+* DNS resolution for discovered services
+
+```shell
+/ # dig @127.0.0.1 -p 8600 monitoring-heapster.service.dc1.consul. ANY
+
+; <<>> DiG 9.10.2-P4 <<>> @127.0.0.1 -p 8600 monitoring-heapster.service.dc1.consul. ANY
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 53710
+;; flags: qr aa rd; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;monitoring-heapster.service.dc1.consul.	IN ANY
+
+;; ANSWER SECTION:
+monitoring-heapster.service.dc1.consul.	0 IN A	10.254.70.176
+
+;; Query time: 1 msec
+;; SERVER: 127.0.0.1#8600(127.0.0.1)
+;; WHEN: Thu Sep 17 10:10:06 UTC 2015
+;; MSG SIZE  rcvd: 110
+```
+
+* Key/Value storage
+
+```shell
+/ # curl -X PUT -d 'monitoring-heapster.service.dc1.consul' http://127.0.0.1:8500/v1/kv/0.70.254.10.IN-ADDR.ARPA/10.254.70.176
+true/
+.
+```
+
+* Key/Value retrieval
+
+```shell
+/ # curl http://127.0.0.1:8500/v1/kv/?recurse
+[{"CreateIndex":85,"ModifyIndex":85,"LockIndex":0,"Key":"0.70.254.10.IN-ADDR.ARPA/10.254.70.176","Flags":0,"Value":"bW9uaXRvcmluZy1oZWFwc3Rlci5zZXJ2aWNlLmRjMS5jb25zdWw="}]/
+.
+```
+
 ## TODO
 
 - Review YAML files, especially ports listed and remove/add as required.
 - Test Key/Value storage
-- Test name resolution
 - Test test test.
 
 ## Known Issues
