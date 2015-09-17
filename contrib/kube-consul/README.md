@@ -152,8 +152,6 @@ true/
 ## TODO
 
 - Review YAML files, especially ports listed and remove/add as required.
-- Test Key/Value storage
-- Test test test.
 
 ## Known Issues
 
