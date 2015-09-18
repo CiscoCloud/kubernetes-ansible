@@ -8,13 +8,11 @@
   tags:
     - flannel
 
-- name: install flannel
-  sudo: yes
-  yum:
-    pkg="flannel-{{ flannel_version }}"
-    state=present
-  tags:
-    - flannel
+- include: stable.yml
+  when: kube_build == "stable"
+
+- include: testing.yml
+  when: kube_build == "testing"
 
 - name: install flannel sysconfig file
   sudo: yes
