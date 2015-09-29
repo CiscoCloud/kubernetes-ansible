@@ -36,13 +36,13 @@ All of the addons depend on the DNS addon for Service Discovery.
         curl -SL 'https://bootstrap.pypa.io/get-pip.py' | python2
         pip install --no-cache-dir --upgrade pip
 
-- Download Openstack RC file from Openstack Project (Access & Security --> API Access)
+- Download Openstack RC file from Openstack Project Web Interface(Access & Security --> API Access)
 
         source openrc.sh
         # prompted for your password for the Openstack Project
 
 - Provide configurations for Openstack
-
+        (From GitHub branch https://github.com/CiscoCloud/kubernetes-ansible/tree/master/terraform)
         cp terraform/openstack.sample.tf openstack.tf
         cp terraform/terraform.tfvars terraform.tfvars
 
