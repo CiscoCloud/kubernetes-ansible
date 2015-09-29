@@ -43,6 +43,7 @@ All of the addons depend on the DNS addon for Service Discovery.
 
 - Provide configurations for Openstack
         (From GitHub branch https://github.com/CiscoCloud/kubernetes-ansible/tree/master/terraform)
+
         cp terraform/openstack.sample.tf openstack.tf
         cp terraform/terraform.tfvars terraform.tfvars
 
