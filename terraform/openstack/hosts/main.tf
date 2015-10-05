@@ -1,15 +1,15 @@
-variable master_count {}
+variable master_count { }
 variable master_flavor { }
 variable datacenter { default = "openstack" }
 variable glusterfs_volume_size { default = "100" } # size is in gigabytes
 variable image_name { }
 variable keypair_name { }
-variable long_name { default = "kubernetes" }
 variable net_id { }
-variable node_count {}
+variable node_count { }
 variable node_flavor { }
-variable security_groups {  }
+variable security_groups { }
 variable short_name { default = "k8s" }
+variable long_name { default = "kubernetes" }
 variable ssh_user { default = "centos" }
 
 resource "openstack_blockstorage_volume_v1" "k8s-glusterfs" {
