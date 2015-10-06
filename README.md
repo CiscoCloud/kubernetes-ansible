@@ -47,7 +47,11 @@ All of the addons depend on the DNS addon for Service Discovery.
         cp terraform/openstack.sample.tf openstack.tf
         cp terraform/terraform.tfvars terraform.tfvars
 
-        # edit the openstack.tf file by providing the following
+        # edit the terraform.tfvars file by providing the following
+        
+        - auth_url (found within openrc.sh)
+        - tenant_id (found within openrc.sh)
+        - tenant_name (found within openrc.sh)
         - location of ssh public key and a unique name
         - VM Flavor for Master node
         - VM Flavor for Worker node
@@ -56,15 +60,11 @@ All of the addons depend on the DNS addon for Service Discovery.
         - Number of worker nodes
         - size (GB) of storage for kubernetes master to use
 
-        # edit the terraform.tfvars file by providing the following
-        - auth_url (found within openrc.sh)
-        - tenant_id (found within openrc.sh)
-        - tenant_name (found within openrc.sh)
-
 - Provision Environment
 
-        terraform get
-        terraform apply
+      terraform get
+      terraform plan
+      terraform apply
 
 - Verify SSH access to the hosts
 
@@ -195,4 +195,3 @@ The following command will append the hosts to your `/etc/hosts` file.
 - Verify NAT settings
 
         sudo iptables -t nat -L -n -v
-
