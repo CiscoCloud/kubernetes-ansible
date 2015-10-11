@@ -6,9 +6,9 @@ etcd_group_name: role=master
 master_group_name: role=master
 minion_group_name: role=node
 
-# Kubernetes build to use, stable is used by default. 
+# Kubernetes build to use, stable is used by default.
 # Place "testing" here to use latest build avialable.
-kube_build: stable
+kube_build: testing
 
 # Users to create for basic auth in Kubernetes API via HTTP
 kube_users:
