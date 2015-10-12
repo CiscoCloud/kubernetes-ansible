@@ -12,7 +12,7 @@
     name: kube-system
     filename: "{{ kube_manifest_dir }}/kube-system.yaml"
     state: present
-  run_once: true
+  when: "'first_master' in group_names"
   tags:
     - addons
 
@@ -43,17 +43,13 @@
     - addons
 
 - include: skydns.yml
-  when: dns_setup
-  run_once: true
+  when: dns_setup and 'first_master' in group_names
 
 - include: kube-ui.yml
-  when: enable_ui
-  run_once: true
+  when: enable_ui and 'first_master' in group_names
 
 - include: logging.yml
-  when: enable_logging
-  run_once: true
+  when: enable_logging and 'first_master' in group_names
 
 - include: monitoring.yml
-  when: enable_monitoring
-  run_once: true
+  when: enable_monitoring and 'first_master' in group_names
