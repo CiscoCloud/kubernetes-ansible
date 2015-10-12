@@ -4,6 +4,7 @@
 - hosts: all
   roles:
     - common
+    - secrets
 
 # provide the control plane
 - hosts: role=master
