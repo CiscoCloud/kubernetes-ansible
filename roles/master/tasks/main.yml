@@ -7,6 +7,12 @@
 
 - include: secrets.yml
 
+- name: evaluate first_master
+  add_host:
+    name: "{{ groups[master_group_name][0] }}"
+    groups: first_master
+  when: master_group_name in groups and (groups[master_group_name] | length) > 0
+
 - name: enable capability for kube-apiserver to bind to port below 1024
   sudo: yes
   capabilities:
@@ -97,8 +103,11 @@
     name: kube-apiserver
     enabled: yes
     state: started
+  failed_when: false
   tags:
     - master
+
+- debug: msg="{{ group_names }}"
 
 - name: Enable controller-manager
   sudo: yes
@@ -106,7 +115,7 @@
     name: kube-controller-manager
     enabled: yes
     state: started
-  delegate_to: "{{ groups[master_group_name][0] }}"
+  when: "'first_master' in group_names"
   tags:
     - master
 
@@ -116,7 +125,7 @@
     name: kube-scheduler
     enabled: yes
     state: started
-  delegate_to: "{{ groups[master_group_name][0] }}"
+  when: "'first_master' in group_names"
   tags:
     - master
 
