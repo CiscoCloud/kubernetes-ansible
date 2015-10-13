@@ -107,8 +107,6 @@
   tags:
     - master
 
-- debug: msg="{{ group_names }}"
-
 - name: Enable controller-manager
   sudo: yes
   service:
