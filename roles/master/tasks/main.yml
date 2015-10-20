@@ -5,6 +5,14 @@
 - include: testing.yml
   when: kube_build == "testing"
 
+- include: secrets.yml
+
+- name: evaluate first_master
+  add_host:
+    name: "{{ groups[master_group_name][0] }}"
+    groups: first_master
+  when: master_group_name in groups and (groups[master_group_name] | length) > 0
+
 - name: enable capability for kube-apiserver to bind to port below 1024
   sudo: yes
   capabilities:
@@ -14,29 +22,6 @@
   when: "{{ kube_master_port | int  }} < 1024"
   notify:
     - restart daemons
-  tags:
-    - master
-
-- name: get the node token values from token files
-  sudo: yes
-  slurp:
-    src: "{{ kube_token_dir }}/{{ item }}-{{ inventory_hostname }}.token"
-  with_items:
-    - "system:controller_manager"
-    - "system:scheduler"
-    - "system:kubectl"
-    - "system:proxy"
-  register: tokens
-  delegate_to: "{{ groups[master_group_name][0] }}"
-  tags:
-    - master
-
-- name: Set token facts
-  set_fact:
-    controller_manager_token: "{{ tokens.results[0].content|b64decode }}"
-    scheduler_token: "{{ tokens.results[1].content|b64decode }}"
-    kubectl_token: "{{ tokens.results[2].content|b64decode }}"
-    proxy_token: "{{ tokens.results[3].content|b64decode }}"
   tags:
     - master
 
@@ -118,6 +103,7 @@
     name: kube-apiserver
     enabled: yes
     state: started
+  failed_when: false
   tags:
     - master
 
@@ -127,6 +113,7 @@
     name: kube-controller-manager
     enabled: yes
     state: started
+  when: "'first_master' in group_names"
   tags:
     - master
 
@@ -136,6 +123,7 @@
     name: kube-scheduler
     enabled: yes
     state: started
+  when: "'first_master' in group_names"
   tags:
     - master
 

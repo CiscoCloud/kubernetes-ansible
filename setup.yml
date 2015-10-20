@@ -4,13 +4,12 @@
 - hosts: all
   roles:
     - common
+    - secrets
 
 # provide the control plane
 - hosts: role=master
   gather_facts: no
   roles:
-    - etcd
-    - flannel
     - master
     - addons
     - dnsmasq
@@ -19,7 +18,5 @@
 - hosts: role=node
   gather_facts: no
   roles:
-    - docker
-    - flannel
     - minion
     - dnsmasq

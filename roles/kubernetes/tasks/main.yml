@@ -20,7 +20,3 @@
     - restart daemons
   tags:
     - kubernetes
-
-- include: secrets.yml
-  tags:
-    - secrets

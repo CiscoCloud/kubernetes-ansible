@@ -12,33 +12,44 @@
     name: kube-system
     filename: "{{ kube_manifest_dir }}/kube-system.yaml"
     state: present
+  when: "'first_master' in group_names"
   tags:
     - addons
 
-- name: Run kube-gen-token script to create {{ kube_token_dir }}/known_tokens.csv
-  sudo: yes
-  command: "{{ kube_script_dir }}/kube-gen-token.sh {{ item }}"
+- name: tokens | generate tokens for addons
+  local_action: command
+    bash -c "{{ playbook_dir }}/{{ cert_syncdir.path }}/kube-gen-token.sh {{ item }}"
   environment:
-    TOKEN_DIR: "{{ kube_token_dir }}"
+    TOKEN_DIR: "{{ tokens_syncdir.path }}"
   with_items:
     - "system:dns"
     - "system:monitoring"
     - "system:logging"
   register: gentoken
+  run_once: true
   changed_when: "'Added' in gentoken.stdout"
+
+- name: tokens | upload known_tokens to master
+  sudo: yes
+  copy:
+    src: "{{ tokens_syncdir.path }}/known_tokens.csv"
+    dest: "{{ kube_token_dir }}"
+    group: "{{ kube_cert_group }}"
+    owner: kube
+    mode: 0440
   notify:
     - restart apiserver
   tags:
     - addons
 
 - include: skydns.yml
-  when: dns_setup
+  when: dns_setup and 'first_master' in group_names
 
 - include: kube-ui.yml
-  when: enable_ui
+  when: enable_ui and 'first_master' in group_names
 
 - include: logging.yml
-  when: enable_logging
+  when: enable_logging and 'first_master' in group_names
 
 - include: monitoring.yml
-  when: enable_monitoring
+  when: enable_monitoring and 'first_master' in group_names
