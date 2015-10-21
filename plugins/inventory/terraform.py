@@ -135,10 +135,6 @@ def openstack_host(resource, module_name):
         'ansible_ssh_port': 22,
         'ansible_ssh_user': raw_attrs.get('metadata.ssh_user', 'centos'),
         'ansible_ssh_host': raw_attrs['access_ip_v4'],
-        # workaround for an OpenStack bug where hosts have a different domain
-        # after they're restarted
-        'host_domain': 'novalocal',
-        'use_host_domain': True,
         # generic
         'public_ipv4': raw_attrs['access_ip_v4'],
         'private_ipv4': raw_attrs['access_ip_v4'],
@@ -153,12 +149,10 @@ def openstack_host(resource, module_name):
     })
 
     # add groups based on attrs
-    groups.append('os_image=' + attrs['image']['name'])
-    groups.append('os_flavor=' + attrs['flavor']['name'])
     groups.extend('os_metadata_%s=%s' % item
                   for item in attrs['metadata'].items())
     groups.append('os_region=' + attrs['region'])
-    groups.append('role=' + attrs['metadata'].get('role', 'none'))
+    groups.append(attrs['metadata'].get('role', 'none'))
 
     return name, attrs, groups
 
