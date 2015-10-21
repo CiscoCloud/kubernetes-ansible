@@ -7,7 +7,7 @@
     - secrets
 
 # provide the control plane
-- hosts: role=master
+- hosts: master
   gather_facts: no
   roles:
     - master
@@ -15,7 +15,7 @@
     - dnsmasq
 
 # provide the execution plane
-- hosts: role=node
+- hosts: node
   gather_facts: no
   roles:
     - minion
