@@ -56,15 +56,15 @@ When following the instructions in this section, replace PROJECT with the lowerc
         - openstack - Common OpenStack client supporting multiple services
 
 How to install with pip:
-# pip install python-PROJECTclient
+ pip install python-PROJECTclient
 (Replace PROJECT with the lowercase name of the client)
 
 How to update with pip:
-# pip install --upgrade python-PROJECTclient
+ pip install --upgrade python-PROJECTclient
 (Replace PROJECT with the lowercase name of the client)
 
 To remove the client, run the pip uninstall command:
-# pip uninstall python-PROJECTclient
+ pip uninstall python-PROJECTclient
 (Replace PROJECT with the lowercase name of the client)
 
 Additional OpenStack CLI information: http://docs.openstack.org/user-guide/common/cli_install_openstack_command_line_clients.html
