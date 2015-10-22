@@ -32,7 +32,8 @@ All of the addons depend on the DNS addon for Service Discovery.
         unzip terraform.zip -d /usr/local/bin
 
 - Install pip package (CentOS/RedHat)
-        yum install python-devel python-pip
+
+        # yum install python-devel python-pip
         
 - Install the OpenStack command-line clients
 
@@ -55,19 +56,19 @@ When following the instructions in this section, replace PROJECT with the lowerc
         - tuskar - Deployment service API
         - openstack - Common OpenStack client supporting multiple services
 
-How to install with pip:
- pip install python-PROJECTclient
-(Replace PROJECT with the lowercase name of the client)
+        # How to install with pip:
+        pip install python-PROJECTclient
+        (Replace PROJECT with the lowercase name of the client)
 
-How to update with pip:
- pip install --upgrade python-PROJECTclient
-(Replace PROJECT with the lowercase name of the client)
+        # How to update with pip:
+        pip install --upgrade python-PROJECTclient
+        (Replace PROJECT with the lowercase name of the client)
 
-To remove the client, run the pip uninstall command:
- pip uninstall python-PROJECTclient
-(Replace PROJECT with the lowercase name of the client)
+        To remove the client, run the pip uninstall command:
+        pip uninstall python-PROJECTclient
+        (Replace PROJECT with the lowercase name of the client)
 
-Additional OpenStack CLI information: http://docs.openstack.org/user-guide/common/cli_install_openstack_command_line_clients.html
+Additional OpenStack CLI information [here](http://docs.openstack.org/user-guide/common/cli_install_openstack_command_line_clients.html)
 
 - Download Openstack RC file from Openstack Project Web Interface(Access & Security --> API Access)
 
@@ -98,9 +99,9 @@ Additional OpenStack CLI information: http://docs.openstack.org/user-guide/commo
 
 - Provision Environment
 
-      terraform get (Get modules)
-      terraform plan (Checking configuration)
-      terraform apply (Apply )
+        terraform get (Get modules)
+        terraform plan (Checking configuration)
+        terraform apply (Apply )
 
 - Verify SSH access to the hosts
 
