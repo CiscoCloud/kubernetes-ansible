@@ -31,10 +31,44 @@ All of the addons depend on the DNS addon for Service Discovery.
         wget -q -O terraform.zip https://dl.bintray.com/mitchellh/terraform/terraform_0.6.3_linux_amd64.zip
         unzip terraform.zip -d /usr/local/bin
 
-- Install python pip
+- Install pip package (CentOS/RedHat)
 
-        curl -SL 'https://bootstrap.pypa.io/get-pip.py' | python2
-        pip install --no-cache-dir --upgrade pip
+        # yum install python-devel python-pip
+        
+- Install the OpenStack command-line clients
+
+When following the instructions in this section, replace PROJECT with the lowercase name of the client to install, such as nova. Repeat for each client. The following values are valid:
+
+        - barbican - Key Manager Service API
+        - ceilometer - Telemetry API
+        - cinder - Block Storage API and extensions
+        - glance - Image service API
+        - heat - Orchestration API
+        - magnum - Containers service API
+        - manila - Shared file systems API
+        - mistral - Workflow service API
+        - murano - Application catalog API
+        - neutron - Networking API
+        - nova - Compute API and extensions
+        - sahara - Data Processing API
+        - swift - Object Storage API
+        - trove - Database service API
+        - tuskar - Deployment service API
+        - openstack - Common OpenStack client supporting multiple services
+
+        # How to install with pip:
+        pip install python-PROJECTclient
+        (Replace PROJECT with the lowercase name of the client)
+
+        # How to update with pip:
+        pip install --upgrade python-PROJECTclient
+        (Replace PROJECT with the lowercase name of the client)
+
+        # To remove the client, run the pip uninstall command:
+        pip uninstall python-PROJECTclient
+        (Replace PROJECT with the lowercase name of the client)
+
+Additional [OpenStack](http://docs.openstack.org/) CLI information [here](http://docs.openstack.org/user-guide/common/cli_install_openstack_command_line_clients.html)
 
 - Download Openstack RC file from Openstack Project Web Interface(Access & Security --> API Access)
 
@@ -49,22 +83,25 @@ All of the addons depend on the DNS addon for Service Discovery.
 
         # edit the terraform.tfvars file by providing the following
         
-        - auth_url (found within openrc.sh)
-        - tenant_id (found within openrc.sh)
-        - tenant_name (found within openrc.sh)
+        - auth_url (found within *openrc.sh)
+        - tenant_id (found within *openrc.sh)
+        - tenant_name (found within *openrc.sh)
         - location of ssh public key and a unique name
-        - VM Flavor for Master node
-        - VM Flavor for Worker node
-        - Network ID
-        - OS Image Name (centos 7.x)
+        - VM Flavor for Master node (*nova flavor-list)
+        - VM Flavor for Worker node (*nova flavor-list)
+        - Network ID (*nova net-list)
+        - OS Image Name (*nova image-list)
         - Number of worker nodes
         - size (GB) of storage for kubernetes master to use
 
+        *nova - example if you using NOVA Compute API and extensions
+        *openrc.sh - Openstack Project Web Interface
+
 - Provision Environment
 
-      terraform get
-      terraform plan
-      terraform apply
+        terraform get (Get modules)
+        terraform plan (Checking configuration)
+        terraform apply (Apply )
 
 - Verify SSH access to the hosts
 
@@ -195,3 +232,4 @@ The following command will append the hosts to your `/etc/hosts` file.
 - Verify NAT settings
 
         sudo iptables -t nat -L -n -v
+
