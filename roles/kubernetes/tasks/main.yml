@@ -16,7 +16,5 @@
   template:
     src: config.j2
     dest: "{{ kube_config_dir }}/config"
-  notify:
-    - restart daemons
   tags:
     - kubernetes
