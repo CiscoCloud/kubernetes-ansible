@@ -149,9 +149,6 @@ def openstack_host(resource, module_name):
     })
 
     # add groups based on attrs
-    groups.extend('os_metadata_%s=%s' % item
-                  for item in attrs['metadata'].items())
-    groups.append('os_region=' + attrs['region'])
     groups.append(attrs['metadata'].get('role', 'none'))
 
     return name, attrs, groups
