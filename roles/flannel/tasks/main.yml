@@ -34,5 +34,3 @@
     - reconfig docker
   tags:
     - flannel
-
-- include: iptables.yml
