@@ -4,7 +4,7 @@
   yum:
     pkg: "etcd-{{ ectd_version }}"
     state: present
-  when: inventory_hostname in groups[etcd_group_name]
+  when: inventory_hostname in groups['master']
   notify:
     - restart etcd
   tags:
@@ -15,7 +15,7 @@
   template:
     src: etcd.conf.j2
     dest: "{{ etcd_conf_dir }}/etcd.conf"
-  when: inventory_hostname in groups[etcd_group_name]
+  when: inventory_hostname in groups['master']
   notify:
     - restart etcd
   tags:
@@ -26,7 +26,7 @@
   service:
      name: etcd
      enabled: yes
-  when: inventory_hostname in groups[etcd_group_name]
+  when: inventory_hostname in groups['master']
   tags:
     - etcd
 
@@ -35,7 +35,7 @@
   service:
      name: etcd
      state: started
-  when: inventory_hostname in groups[etcd_group_name]
+  when: inventory_hostname in groups['master']
   register: etcd_started
   tags:
     - etcd
