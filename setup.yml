@@ -1,22 +1,32 @@
 ---
 # all facts for all hosts are gathered; and the common packages
 # and configurations are performed on each host.
-- hosts: all
+- name: All
+  hosts: all
   roles:
     - common
     - secrets
 
 # provide the control plane
-- hosts: master
+- name: Master
+  hosts: master
   gather_facts: no
   roles:
+    - etcd
+    - flannel
+    - kubernetes
     - master
     - addons
     - dnsmasq
 
 # provide the execution plane
-- hosts: node
+- name: Node
+  hosts: node
   gather_facts: no
   roles:
+    - etcd
+    - docker
+    - flannel
+    - kubernetes
     - minion
     - dnsmasq
