@@ -10,6 +10,7 @@ variable image_name {}
 variable datacenter {}
 variable floating_pool {}
 variable external_net_id {}
+variable subnet_cidr {}
 variable master_count {}
 variable node_count {}
 
@@ -42,4 +43,5 @@ module "k8s-hosts-floating" {
   node_count = "${ var.node_count }"
   floating_pool = "${ var.floating_pool }"
   external_net_id = "${ var.external_net_id }"
+  subnet_cidr = "${ var.subnet_cidr }"
 }
