@@ -1,5 +1,5 @@
 {% macro initial_cluster() -%}
-{% for host in groups[etcd_group_name] -%}
+{% for host in groups['master'] -%}
 {% if loop.last -%}
 {{ hostvars[host]['ansible_hostname'] }}={{ etcd_peer_url_scheme }}://{{ hostvars[host]['ansible_hostname'] }}:{{ etcd_peer_port }}
 {%- else -%}
@@ -8,7 +8,7 @@
 {% endfor -%}
 {% endmacro -%}
 
-{% if groups[etcd_group_name] and groups[etcd_group_name] | length > 1 %}
+{% if groups['master'] and groups['master'] | length > 1 %}
 ETCD_NAME={{ ansible_hostname }}
 ETCD_LISTEN_PEER_URLS={{ etcd_listen_peer_urls }}
 {% else %}
@@ -23,7 +23,7 @@ ETCD_LISTEN_CLIENT_URLS={{ etcd_listen_client_urls }}
 #ETCD_MAX_WALS="5"
 #ETCD_CORS=""
 
-{% if groups[etcd_group_name] and groups[etcd_group_name] | length > 1 %}
+{% if groups['master'] and groups['master'] | length > 1 %}
 #[cluster]
 ETCD_INITIAL_ADVERTISE_PEER_URLS={{ etcd_initial_advertise_peer_urls }}
 ETCD_INITIAL_CLUSTER={{ initial_cluster() }}

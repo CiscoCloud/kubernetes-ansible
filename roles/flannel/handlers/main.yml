@@ -6,7 +6,7 @@
     - stop docker
     - delete docker0
     - start docker
-  when: inventory_hostname in groups[minion_group_name]
+  when: inventory_hostname in groups['node']
 
 - name: restart flannel
   sudo: yes

@@ -7,7 +7,7 @@
   with_items:
     - "dnsmasq-{{ dnsmasq_version }}"
     - "bind-utils-{{ bind_utils_version }}"
-  when: inventory_hostname in groups[master_group_name]
+  when: inventory_hostname in groups['master']
   tags:
     - dnsmasq
 
@@ -16,7 +16,7 @@
   file:
     path: /etc/dnsmasq.d
     state: directory
-  when: inventory_hostname in groups[master_group_name]
+  when: inventory_hostname in groups['master']
   tags:
     - dnsmasq
 
@@ -28,7 +28,7 @@
     mode: 755
   notify:
     - restart dnsmasq
-  when: inventory_hostname in groups[master_group_name]
+  when: inventory_hostname in groups['master']
   tags:
     - dnsmasq
 
@@ -38,7 +38,7 @@
     name: dnsmasq
     state: started
     enabled: yes
-  when: inventory_hostname in groups[master_group_name]
+  when: inventory_hostname in groups['master']
   tags:
     - dnsmasq
 
