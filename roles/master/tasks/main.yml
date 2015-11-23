@@ -11,8 +11,8 @@
   add_host:
     name: "{{ groups['master'][0] }}"
     groups: first_master
-#   when: master in groups and length(groups['master']) > 0
-
+    when: "master in groups and groups['master'] | length > 1"
+    
 - name: enable capability for kube-apiserver to bind to port below 1024
   sudo: yes
   capabilities:
