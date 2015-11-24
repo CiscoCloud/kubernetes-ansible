@@ -4,3 +4,5 @@
 /*.tf
 /*.tfvars
 **/*.syncdir
+/.bundle
+/vendor
