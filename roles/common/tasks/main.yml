@@ -24,6 +24,21 @@
   tags:
     - common
 
+- name: check if selinux enforcing
+  sudo: yes
+  command: getenforce
+  register: selinux
+  changed_when: false
+  tags:
+    - common
+
+- name: set selinux permissive
+  sudo: yes
+  selinux: state=permissive policy=targeted
+  when: "'Enforcing' in selinux.stdout"
+  tags:
+    - common
+
 # add hosts to /etc/hosts
 - name: populate inventory into hosts file
   sudo: yes
@@ -49,6 +64,12 @@
   tags:
     - common
 
+- name: upgrade all packages
+  sudo: yes
+  yum: name=* state=latest
+  tags:
+    - common
+
 - name: enable EPEL repo
   sudo: yes
   yum:
@@ -62,6 +83,14 @@
   copy:
     src=virt7-docker-common-candidate.repo
     dest=/etc/yum.repos.d/virt7-docker-common-candidate.repo
-  when: kube_build == "testing"
+  when: package_channel == "testing"
+  tags:
+    - common
+
+- name: evaluate first_master
+  add_host:
+    name: "{{ groups['master'][0] }}"
+    groups: first_master
+    when: "master in groups and groups['master'] | length > 1"
   tags:
     - common

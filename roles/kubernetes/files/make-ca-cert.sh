@@ -31,7 +31,7 @@ set -o pipefail
 service_range="${SERVICE_CLUSTER_IP_RANGE:="10.0.0.0/16"}"
 dns_domain="${DNS_DOMAIN:="cluster.local"}"
 cert_dir="${CERT_DIR:-"/tmp/certs"}"
-cert_group="${CERT_GROUP:="kube-cert"}"
+cert_group="${CERT_GROUP:="kube"}"
 masters="${MASTERS}"
 
 # The following certificate pairs are created:
