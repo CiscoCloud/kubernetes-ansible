@@ -59,7 +59,7 @@
   kube:
     namespace: kube-system
     resource: rc
-    name: monitoring-influx-grafana-v1
+    name: monitoring-influxdb-grafana-v2
     filename: "{{ kube_manifest_dir }}/influxdb-grafana-controller.yaml"
     state: "{{ influxdb_rc_def.changed | ternary('latest','present') }}"
   when: enable_monitoring
@@ -98,7 +98,7 @@
   kube:
     namespace: kube-system
     resource: rc
-    name: monitoring-heapster-v8
+    name: heapster-v10
     filename: "{{ kube_manifest_dir }}/heapster-controller.yaml"
     state: "{{ heapster_rc_def.changed | ternary('latest','present') }}"
   when: enable_monitoring
@@ -111,11 +111,10 @@
   kube:
     namespace: kube-system
     resource: svc
-    name: monitoring-heapster
+    name: heapster
     filename: "{{ kube_manifest_dir }}/heapster-service.yaml"
     state: "{{ heapster_svc_def.changed | ternary('latest','present') }}"
   when: enable_monitoring
   tags:
     - addons
     - monitoring
-
