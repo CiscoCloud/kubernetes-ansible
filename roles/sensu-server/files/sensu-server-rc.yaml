@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: sensu-server-v1
+  namespace: kube-system
+  labels:
+    name: sensu-server
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    name: sensu-server
+    version: v1
+  template:
+    metadata:
+      labels:
+        name: sensu-server
+        version: v1
+    spec:
+      containers:
+      - name: sensu-server
+        image: oslobod/sensu
+        imagePullPolicy: Always
+        args:
+        - "server"
+        resources:
+          limits:
+            cpu: 100m
+        env:
+        - name: RABBITMQ_HOST
+          value: "rabbitmq-master"
+        - name: REDIS_HOST
+          value: "redis-master"
+        - name: KAFKA_HOST
+          value: "kafka.kube-system.svc.cluster.local"
+        - name: KAFKA_TOPIC
+          value: "sensu"
+        - name: API_HOST
+          value: "sensu-api"
+        - name: API_PORT
+          value: "4567"

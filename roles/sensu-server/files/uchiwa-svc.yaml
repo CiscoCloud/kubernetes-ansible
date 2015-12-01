@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: uchiwa
+  namespace: kube-system
+  labels:
+    k8s-app: uchiwa
+    kubernetes.io/cluster-service: "true"
+    kubernetes.io/name: "Uchiwa"
+spec:
+  ports:
+  - port: 3000
+    targetPort: 3000
+  selector:
+    k8s-app: uchiwa

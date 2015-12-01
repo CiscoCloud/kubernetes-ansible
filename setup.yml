@@ -18,6 +18,8 @@
     - master
     - addons
     - dnsmasq
+    - sensu-server
+    - sensu-client
 
 # provide the execution plane
 - name: Node
@@ -30,3 +32,4 @@
     - kubernetes
     - minion
     - dnsmasq
+    - sensu-client

@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: rabbitmq-master-v1
+  namespace: kube-system
+  labels:
+    name: rabbitmq-master
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    name: rabbitmq-master
+    version: v1
+  template:
+    metadata:
+      labels:
+        name: rabbitmq-master
+        version: v1
+    spec:
+      containers:
+        - image: bijukunjummen/rabbitmq-server
+          name: rabbitmq-master
+          resources:
+            limits:
+              cpu: 100m
+          ports:
+          - containerPort: 5672
+            name: amqp
+          - containerPort: 25672
+            name: amqp-cluster
+          - containerPort: 4369
+            name: epmd
+          - containerPort: 44001
+            name: epmd-cluster
+          - containerPort: 15672
+            name: management

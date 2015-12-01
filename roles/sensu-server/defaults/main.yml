@@ -1,0 +1,3 @@
+# FIXME delete this!
+kube_config_dir: /etc/kubernetes
+kube_manifest_dir: "{{ kube_config_dir }}/manifests"

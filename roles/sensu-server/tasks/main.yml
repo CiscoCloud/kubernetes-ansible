@@ -1,0 +1,18 @@
+---
+- include: rabbitmq.yml
+  # when: enable_metrics and 'first_master' in group_names
+
+- include: redis.yml
+#   when: enable_metrics and 'first_master' in group_names
+
+- include: kafka.yml
+#   when: enable_metrics and 'first_master' in group_names
+
+- include: sensu-api.yml
+#   when: enable_metrics and 'first_master' in group_names
+
+- include: sensu-server.yml
+#   when: enable_metrics and 'first_master' in group_names
+
+- include: uchiwa.yml
+#   when: enable_metrics and 'first_master' in group_names

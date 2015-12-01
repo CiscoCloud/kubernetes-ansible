@@ -43,17 +43,20 @@ overlay_network_host_prefix: 24
 # You still must manually configure all your containers to use this DNS server,
 # Kubernetes won't do this for you (yet).
 
-# Turn this varable to 'false' to disable whole DNS configuration.
+# Turn this varable to `false` to disable whole DNS configuration.
 dns_setup: true
 
 # Number of replicas of DNS instances started on kubernetes
 dns_replicas: 1
 
-# Set to 'false' to disable default Kubernetes UI setup
+# Set to `false` to disable default Kubernetes UI setup
 enable_ui: true
 
-# Set to 'false' to disable default Elasticsearch + Kibana logging setup
+# Set to `false` to disable default Elasticsearch + Kibana logging setup
 enable_logging: true
 
-# Set to "false' to disable default Monitoring (cAdvisor + heapster + influxdb + grafana)
+# Set to `false` to disable default Monitoring (cAdvisor + heapster + influxdb + grafana)
 enable_monitoring: true
+
+# Set to `false` to disable default Metrics setup (RabbitMQ + Redis + Sensu + Uchiwa + Kafka)
+enable_metrics: true

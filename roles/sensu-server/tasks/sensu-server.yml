@@ -1,0 +1,22 @@
+---
+- name: Sensu Server | Write pod file
+  sudo: yes
+  copy:
+    src: sensu-server-rc.yaml
+    dest: "{{ kube_manifest_dir }}/sensu-server-rc.yaml"
+  register: sensu_server_rc_def
+  when: enable_metrics
+  tags:
+    - sensu-server
+
+- name: Sensu Server | Create or update replication controller
+  sudo: yes
+  kube:
+    namespace: kube-system
+    resource: rc
+    name: sensu-server-v1
+    filename: "{{ kube_manifest_dir }}/sensu-server-rc.yaml"
+    state: "{{ sensu_server_rc_def.changed | ternary('latest','present') }}"
+  when: enable_metrics
+  tags:
+    - sensu-server

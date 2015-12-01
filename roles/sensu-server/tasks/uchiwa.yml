@@ -1,0 +1,48 @@
+---
+- name: Uchiwa | Write pod file
+  sudo: yes
+  copy:
+    src: uchiwa-rc.yaml
+    dest: "{{ kube_manifest_dir }}/uchiwa-rc.yaml"
+  register: uchiwa_rc_def
+  when: enable_metrics
+  tags:
+    - sensu-server
+    - uchiwa
+
+- name: Uchiwa | Write service file
+  sudo: yes
+  copy:
+    src: uchiwa-svc.yaml
+    dest: "{{ kube_manifest_dir }}/uchiwa-svc.yaml"
+  register: uchiwa_svc_def
+  when: enable_metrics
+  tags:
+    - sensu-server
+    - uchiwa
+
+- name: Uchiwa | Create or update replication controller
+  sudo: yes
+  kube:
+    namespace: kube-system
+    resource: rc
+    name: uchiwa-v1
+    filename: "{{ kube_manifest_dir }}/uchiwa-rc.yaml"
+    state: "{{ uchiwa_rc_def.changed | ternary('latest','present') }}"
+  when: enable_metrics
+  tags:
+    - sensu-server
+    - uchiwa
+
+- name: Uchiwa | Create or update service
+  sudo: yes
+  kube:
+    namespace: kube-system
+    resource: svc
+    name: uchiwa
+    filename: "{{ kube_manifest_dir }}/uchiwa-svc.yaml"
+    state: "{{ uchiwa_svc_def.changed | ternary('latest','present') }}"
+  when: enable_metrics
+  tags:
+    - sensu-server
+    - uchiwa

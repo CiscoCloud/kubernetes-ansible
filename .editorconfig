@@ -10,7 +10,7 @@ end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-# 4 space indentation
+# 2 space indentation
 [*.rb]
 indent_size = 2
 indent_style = space

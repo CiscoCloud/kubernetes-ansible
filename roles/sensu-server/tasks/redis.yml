@@ -1,0 +1,48 @@
+---
+- name: Redis | Write pod file
+  sudo: yes
+  copy:
+    src: redis-rc.yaml
+    dest: "{{ kube_manifest_dir }}/redis-rc.yaml"
+  register: redis_rc_def
+  when: enable_metrics
+  tags:
+    - sensu-server
+    - redis
+
+- name: Redis | Write service file
+  sudo: yes
+  copy:
+    src: redis-svc.yaml
+    dest: "{{ kube_manifest_dir }}/redis-svc.yaml"
+  register: redis_svc_def
+  when: enable_metrics
+  tags:
+    - sensu-server
+    - redis
+
+- name: Redis | Create or update replication controller
+  sudo: yes
+  kube:
+    namespace: kube-system
+    resource: rc
+    name: redis-master-v1
+    filename: "{{ kube_manifest_dir }}/redis-rc.yaml"
+    state: "{{ redis_rc_def.changed | ternary('latest','present') }}"
+  when: enable_metrics
+  tags:
+    - sensu-server
+    - redis
+
+- name: Redis | Create or update service
+  sudo: yes
+  kube:
+    namespace: kube-system
+    resource: svc
+    name: redis-master
+    filename: "{{ kube_manifest_dir }}/redis-svc.yaml"
+    state: "{{ redis_svc_def.changed | ternary('latest','present') }}"
+  when: enable_metrics
+  tags:
+    - sensu-server
+    - redis
