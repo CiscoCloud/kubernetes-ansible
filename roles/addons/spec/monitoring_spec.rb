@@ -10,12 +10,12 @@ if ANSIBLE_GROUP_VARS['enable_monitoring']
           its(:content) { should eq File.read(File.join(__dir__, '..', 'files', 'influxdb-grafana-controller.yaml')) }
         end
 
-        describe k8s_replication_controller('monitoring-influx-grafana-v1', 'kube-system') do
+        describe k8s_replication_controller('monitoring-influxdb-grafana-v2', 'kube-system') do
           it { should be_present }
           its(:desired_replicas) { should eq 1 }
           its(:containers) { should deep_include(
             'name' => 'influxdb',
-            'image' => 'gcr.io/google_containers/heapster_influxdb:v0.3',
+            'image' => 'gcr.io/google_containers/heapster_influxdb:v0.4',
             'ports' => [
               {
                 'hostPort' => 8083,
@@ -31,7 +31,7 @@ if ANSIBLE_GROUP_VARS['enable_monitoring']
           ) }
           its(:containers) { should deep_include(
             'name' => 'grafana',
-            'image' => 'gcr.io/google_containers/heapster_grafana:v0.7'
+            'image' => 'gcr.io/google_containers/heapster_grafana:v2.1.1'
           ) }
           its(:pod_count) { should eq 1 }
           its(:pods) { should deep_include(
@@ -45,9 +45,9 @@ if ANSIBLE_GROUP_VARS['enable_monitoring']
           ) }
           its(:labels) { should include 'k8s-app' => 'influxGrafana' }
           its(:labels) { should include 'kubernetes.io/cluster-service' => 'true' }
-          its(:labels) { should include 'version' => 'v1' }
+          its(:labels) { should include 'version' => 'v2' }
           its(:selector) { should include 'k8s-app' => 'influxGrafana' }
-          its(:selector) { should include 'version' => 'v1' }
+          its(:selector) { should include 'version' => 'v2' }
         end
       end
 
@@ -93,7 +93,7 @@ if ANSIBLE_GROUP_VARS['enable_monitoring']
           its(:ip) { should be_in_subnet(ANSIBLE_GROUP_VARS['kube_service_addresses']) }
           its(:ports) { should deep_include(
             'port' => 80,
-            'targetPort' => 8080,
+            'targetPort' => 3000,
             'protocol' => 'TCP'
           ) }
           its(:labels) { should include 'kubernetes.io/cluster-service' => 'true' }
@@ -110,12 +110,12 @@ if ANSIBLE_GROUP_VARS['enable_monitoring']
           its(:content) { should eq File.read(File.join(__dir__, '..', 'files', 'heapster-controller.yaml')) }
         end
 
-        describe k8s_replication_controller('monitoring-heapster-v8', 'kube-system') do
+        describe k8s_replication_controller('heapster-v10', 'kube-system') do
           it { should be_present }
           its(:desired_replicas) { should eq 1 }
           its(:containers) { should deep_include(
             'name' => 'heapster',
-            'image' => 'gcr.io/google_containers/heapster:v0.17.0'
+            'image' => 'gcr.io/google_containers/heapster:v0.18.2'
           ) }
           its(:pod_count) { should eq 1 }
           its(:pods) { should deep_include(
@@ -125,9 +125,9 @@ if ANSIBLE_GROUP_VARS['enable_monitoring']
           ) }
           its(:labels) { should include 'k8s-app' => 'heapster' }
           its(:labels) { should include 'kubernetes.io/cluster-service' => 'true' }
-          its(:labels) { should include 'version' => 'v8' }
+          its(:labels) { should include 'version' => 'v10' }
           its(:selector) { should include 'k8s-app' => 'heapster' }
-          its(:selector) { should include 'version' => 'v8' }
+          its(:selector) { should include 'version' => 'v10' }
         end
       end
 
@@ -137,7 +137,7 @@ if ANSIBLE_GROUP_VARS['enable_monitoring']
           its(:content) { should eq File.read(File.join(__dir__, '..', 'files', 'heapster-service.yaml')) }
         end
 
-        describe k8s_service('monitoring-heapster', 'kube-system') do
+        describe k8s_service('heapster', 'kube-system') do
           it { should be_present }
           its(:ip) { should be_in_subnet(ANSIBLE_GROUP_VARS['kube_service_addresses']) }
           its(:ports) { should deep_include(
