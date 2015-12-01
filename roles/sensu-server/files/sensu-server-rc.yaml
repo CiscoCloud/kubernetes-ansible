@@ -32,7 +32,7 @@ spec:
         - name: REDIS_HOST
           value: "redis-master"
         - name: KAFKA_HOST
-          value: "kafka.kube-system.svc.cluster.local"
+          value: "kafka"
         - name: KAFKA_TOPIC
           value: "sensu"
         - name: API_HOST
