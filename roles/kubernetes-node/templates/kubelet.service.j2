@@ -1,0 +1,23 @@
+[Unit]
+Description=Kubernetes Kubelet
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+After=docker.service
+Requires=docker.service
+
+[Service]
+ExecStart=/usr/bin/kubelet \
+  --api_servers={% for node in groups['master'] %}https://{{ node }}{% if not loop.last %},{% endif %}{% endfor %} \
+  --allow-privileged=true \
+  --config={{ kube_manifest_dir }} \
+  --hostname-override={{ ansible_hostname }} \
+  --cluster-dns={{ dns_server }} \
+  --cluster-domain={{ dns_domain }} \
+  --kubeconfig={{ kube_config_dir }}/node.kubeconfig \
+  --tls-cert-file={{ kube_cert_dir }}/kubelet.crt \
+  --tls-private-key-file={{ kube_cert_dir }}/kubelet.key \
+  --v=2
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

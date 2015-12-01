@@ -1,0 +1,73 @@
+---
+- include: secrets.yml
+  tags:
+    - secrets
+
+- name: download kubernetes binaries
+  sudo: yes
+  get_url: url={{ kube_url }}/{{ item }} dest=/usr/bin mode=0753
+  with_items:
+    - kubelet
+    - kubectl
+  tags:
+    - node
+
+- name: generate kublet systemd unit
+  sudo: yes
+  template:
+    src: kubelet.service.j2
+    dest: /usr/lib/systemd/system/kubelet.service
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload systemd
+    - restart kubelet
+  tags:
+    - node
+
+- name: generate kublet kubeconfig
+  sudo: yes
+  template:
+    src: node.kubeconfig.j2
+    dest: "{{ kube_config_dir }}/node.kubeconfig"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload systemd
+    - restart kubelet
+  tags:
+    - node
+
+- name: enable and start kubelet service
+  sudo: yes
+  service:
+    name: kubelet
+    enabled: yes
+    state: started
+  tags:
+    - node
+
+- name: generate kubernetes manifests
+  sudo: yes
+  template:
+    src: "{{ item }}.yml"
+    dest: "{{ kube_manifest_dir }}/{{ item }}.yml"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - kube-proxy
+  tags:
+    - node
+
+- name: addons | logging | create fluentd pod
+  sudo: yes
+  copy:
+    src: fluentd-es.yaml
+    dest: "{{ kube_manifest_dir }}/fluentd-es.yaml"
+  when: enable_logging
+  tags:
+    - addons
+    - logging
