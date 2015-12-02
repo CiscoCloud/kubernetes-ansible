@@ -1,6 +1,4 @@
-# The version of software to install for Kubernetes.
-# When testing repo is used, state is "latest", so this has no effect.
-kube_version: 1.0.0
+kube_url: https://storage.googleapis.com/kubernetes-release/release/{{ kube_version }}/bin/linux/amd64
 
 # Kubernetes services logging level, integer from 0 to 4, where 4 is highest
 # Applys to all services globally. Be carefull with highest log level,
@@ -10,7 +8,7 @@ kube_log_level: 0
 # This directory is where all the additional scripts go
 # that Kubernetes normally puts in /srv/kubernetes.
 # This puts them in a sane location
-kube_script_dir: /usr/libexec/kubernetes
+kube_script_dir: /srv/kubernetes
 
 # This directory is where all the additional config stuff goes
 # the kubernetes normally puts in /srv/kubernets.
@@ -24,7 +22,7 @@ kube_config_dir: /etc/kubernetes
 kube_master_port: 443
 
 # This is where all the cert scripts and certs will be located
-kube_cert_dir: "{{ kube_config_dir }}/certs"
+kube_cert_dir: "{{ kube_config_dir }}/ssl"
 
 # This is where all of the bearer tokens will be stored
 kube_token_dir: "{{ kube_config_dir }}/tokens"
@@ -36,9 +34,12 @@ kube_users_dir: "{{ kube_config_dir }}/users"
 # pods on startup
 kube_manifest_dir: "{{ kube_config_dir }}/manifests"
 
+# This is where manifests for podmaster will be stored
+kube_podmaster_dir: "{{ kube_script_dir }}/manifests"
+
 # This is the group that the cert creation scripts chgrp the
 # cert files to. Not really changable...
-kube_cert_group: kube-cert
+kube_cert_group: kube
 
 dns_domain: "{{ cluster_name }}"
 

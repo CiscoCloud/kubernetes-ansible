@@ -5,7 +5,6 @@
   hosts: all
   roles:
     - common
-    - secrets
 
 # provide the control plane
 - name: Master
@@ -14,8 +13,9 @@
   roles:
     - etcd
     - flannel
+    - docker
     - kubernetes
-    - master
+    - kubernetes-master
     - addons
     - dnsmasq
     - sensu-server
@@ -26,10 +26,9 @@
   hosts: node
   gather_facts: no
   roles:
-    - etcd
-    - docker
     - flannel
+    - docker
     - kubernetes
-    - minion
+    - kubernetes-node
     - dnsmasq
     - sensu-client

@@ -1,5 +1,5 @@
 ---
-ectd_version: 2.0.13
+ectd_version: 2.1.1
 etcd_client_port: 2379
 etcd_peer_port: 2380
 etcd_url_scheme: http
@@ -22,4 +22,3 @@ etcd_advertise_client_urls: "{{ etcd_url_scheme }}://{{ ansible_hostname }}:{{ e
 etcd_listen_client_urls: "{{ etcd_url_scheme }}://0.0.0.0:{{ etcd_client_port }}"
 
 etcd_data_dir: /var/lib/etcd
-

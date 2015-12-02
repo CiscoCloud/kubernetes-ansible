@@ -1,0 +1,19 @@
+[Unit]
+Description=Kubernetes Kubelet
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+After=docker.service
+Requires=docker.service
+
+[Service]
+ExecStart=/usr/bin/kubelet \
+  --api-servers=http://localhost:8080 \
+  --register-node=false \
+  --allow-privileged=true \
+  --cluster-dns={{ dns_server }} \
+  --cluster-domain={{ dns_domain }} \
+  --config={{ kube_manifest_dir }}
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

@@ -1,9 +1,11 @@
 # ansible remote user account
 # ansible_ssh_user: centos
 
-# Kubernetes build to use, stable is used by default.
-# Place "testing" here to use latest build avialable.
-kube_build: stable
+# Which type of packages should be used for deployment: stable, testing
+package_channel: stable
+
+# The version of software to install for Kubernetes.
+kube_version: v1.1.2
 
 # Users to create for basic auth in Kubernetes API via HTTP
 kube_users:
@@ -60,3 +62,16 @@ enable_monitoring: true
 
 # Set to `false` to disable default Metrics setup (RabbitMQ + Redis + Sensu + Uchiwa + Kafka)
 enable_metrics: true
+
+# etcd specific variables
+# TCP port used for client communications
+etcd_client_port: 2379
+
+# TCP port used for intra-cluster communications
+etcd_peer_port: 2380
+
+# Client communication protocol (http/https)
+etcd_url_scheme: http
+
+# Intra-cluster communication protocol (http/https)
+etcd_peer_url_scheme: http

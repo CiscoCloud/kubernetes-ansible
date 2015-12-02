@@ -9,12 +9,12 @@ if ANSIBLE_GROUP_VARS['enable_ui']
         its(:content) { should eq File.read(File.join(__dir__, '..', 'files', 'kube-ui-rc.yaml')) }
       end
 
-      describe k8s_replication_controller('kube-ui-v1', 'kube-system') do
+      describe k8s_replication_controller('kube-ui-v3', 'kube-system') do
         it { should be_present }
         its(:desired_replicas) { should eq 1 }
         its(:containers) { should deep_include(
           'name' => 'kube-ui',
-          'image' => 'gcr.io/google_containers/kube-ui:v1.1',
+          'image' => 'gcr.io/google_containers/kube-ui:v3',
           'ports' => [{
             'containerPort' => 8080,
             'protocol' => 'TCP'
@@ -28,9 +28,9 @@ if ANSIBLE_GROUP_VARS['enable_ui']
         ) }
         its(:labels) { should include 'k8s-app' => 'kube-ui' }
         its(:labels) { should include 'kubernetes.io/cluster-service' => 'true' }
-        its(:labels) { should include 'version' => 'v1' }
+        its(:labels) { should include 'version' => 'v3' }
         its(:selector) { should include 'k8s-app' => 'kube-ui' }
-        its(:selector) { should include 'version' => 'v1' }
+        its(:selector) { should include 'version' => 'v3' }
       end
     end
 
