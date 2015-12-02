@@ -1,22 +1,10 @@
 ---
-- name: Sensu Client | Write pod file
+- name: Sensu Client | Create pod
   sudo: yes
   template:
-    src: sensu-client-rc.yaml.j2
-    dest: "{{ kube_manifest_dir }}/sensu-client-rc.yaml"
-  register: sensu_client_rc_def
-  when: enable_metrics
-  tags:
-    - sensu-client
-
-- name: Sensu Client | Create or update replication controller
-  sudo: yes
-  kube:
-    namespace: kube-system
-    resource: rc
-    name: sensu-client-v1
-    filename: "{{ kube_manifest_dir }}/sensu-client-rc.yaml"
-    state: "{{ sensu_client_rc_def.changed | ternary('latest','present') }}"
+    src: sensu-client.yaml.j2
+    dest: "{{ kube_manifest_dir }}/sensu-client.yaml"
+  register: sensu_client_def
   when: enable_metrics
   tags:
     - sensu-client

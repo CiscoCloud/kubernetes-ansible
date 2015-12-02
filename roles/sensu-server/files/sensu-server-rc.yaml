@@ -27,6 +27,8 @@ spec:
           limits:
             cpu: 100m
         env:
+        - name: LOG_LEVEL
+          value: warn
         - name: RABBITMQ_HOST
           value: "rabbitmq-master"
         - name: REDIS_HOST
