@@ -3,7 +3,6 @@
 require 'rake'
 require 'rbconfig'
 require 'rspec/core/rake_task'
-require 'colorize'
 require 'json'
 require 'yaml'
 
