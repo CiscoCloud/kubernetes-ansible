@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-if ANSIBLE_GROUP_VARS['dns_setup']
+if ANSIBLE_GROUP_VARS['dns_setup'] and INVENTORY['master']['hosts'].first == CURRENT_HOST
   describe 'addons : SkyDNS |' do
     describe 'ReplicationController |' do
       describe file('/etc/kubernetes/manifests/skydns-rc.yaml') do

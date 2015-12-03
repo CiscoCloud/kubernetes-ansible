@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-if ANSIBLE_GROUP_VARS['enable_logging']
+if ANSIBLE_GROUP_VARS['enable_logging'] and INVENTORY['master']['hosts'].first == CURRENT_HOST
   describe 'addons : Logging |' do
     describe 'Kibana |' do
       describe 'ReplicationController |' do

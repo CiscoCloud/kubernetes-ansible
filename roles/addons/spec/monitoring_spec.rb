@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-if ANSIBLE_GROUP_VARS['enable_monitoring']
+if ANSIBLE_GROUP_VARS['enable_monitoring'] and INVENTORY['master']['hosts'].first == CURRENT_HOST
   describe 'addons : Monitoring |' do
     describe 'Influxdb |' do
       describe 'ReplicationController |' do
