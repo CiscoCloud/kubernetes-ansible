@@ -19,7 +19,7 @@ spec:
     - name: RABBITMQ_PORT
       value: "5672"
     - name: CLIENT_ADDRESS
-      value: "{{ ansible_hostname }}"
+      value: "{{ ansible_default_ipv4.address }}, {{ ansible_ssh_host }}"
     - name: CLIENT_NAME
       value: "{{ ansible_hostname }}"
     - name: CLIENT_SUBSCRIPTIONS
