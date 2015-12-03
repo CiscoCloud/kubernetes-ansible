@@ -6,7 +6,7 @@ Requires=docker.service
 
 [Service]
 ExecStart=/usr/bin/kubelet \
-  --api_servers={% for node in groups['master'] %}https://{{ node }}{% if not loop.last %},{% endif %}{% endfor %} \
+  --api-servers={% for node in groups['master'] %}https://{{ node }}{% if not loop.last %},{% endif %}{% endfor %} \
   --allow-privileged=true \
   --config={{ kube_manifest_dir }} \
   --hostname-override={{ ansible_hostname }} \

@@ -186,6 +186,14 @@ Show all available Rake-tasks :
 bundle exec rake -T
 ```
 
+To use different [RSpec output formats](http://www.rubydoc.info/gems/rspec-core/RSpec/Core/Formatters) (`documentation` is default one) :
+
+```
+FORMAT=documentation bundle exec rake check:play:All
+FORMAT=json bundle exec rake check:play:All
+FORMAT=progress bundle exec rake check:play:All
+```
+
 
 ### Check cluster deployment
 

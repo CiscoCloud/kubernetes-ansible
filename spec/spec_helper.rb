@@ -36,7 +36,7 @@ options[:keys] ||= ENV['TARGET_PRIVATE_KEY']
 set :host,        options[:host_name] || host
 set :ssh_options, options
 
-CURRENT_HOST = options[:host_name] || host
+CURRENT_HOST = options[:host_name] || ENV['TARGET_HOST_NAME']
 
 
 # `serverspec` could not properly automatically detect `CentOS 7`

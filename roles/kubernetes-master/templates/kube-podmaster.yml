@@ -41,8 +41,8 @@ spec:
       name: manifest-dst
   volumes:
   - hostPath:
-      path: /srv/kubernetes/manifests
+      path: {{ kube_script_dir }}/manifests
     name: manifest-src
   - hostPath:
-      path: /etc/kubernetes/manifests
+      path: {{ kube_manifest_dir }}
     name: manifest-dst

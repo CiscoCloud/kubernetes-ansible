@@ -1,9 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    colorize (0.7.7)
     diff-lcs (1.2.5)
-    json (1.8.3)
     multi_json (1.11.2)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
@@ -42,8 +40,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  colorize
-  json
   rake
   serverspec (~> 2.24.3)
 

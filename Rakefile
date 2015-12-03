@@ -3,7 +3,6 @@
 require 'rake'
 require 'rbconfig'
 require 'rspec/core/rake_task'
-require 'colorize'
 require 'json'
 require 'yaml'
 
@@ -13,9 +12,9 @@ class ServerspecTask < RSpec::Core::RakeTask
   attr_accessor :hosts
 
   def run_task(verbose)
-    hosts.each_pair do |k, v|
-      # instead of `k` (hostname) IP at `v['ansible_ssh_host']` could be used
-      system("env TARGET_HOST=#{k} TARGET_PORT=#{v['ansible_ssh_port']} TARGET_USER=#{v['ansible_ssh_user']} #{spec_command}")
+    hosts.each_pair do |hostname, vars|
+      success = system("env TARGET_HOST=#{vars['ansible_ssh_host']} TARGET_HOST_NAME=#{hostname} TARGET_PORT=#{vars['ansible_ssh_port']} TARGET_USER=#{vars['ansible_ssh_user']} #{spec_command}")
+      raise "Failed!" if not success
     end
   end
 end
