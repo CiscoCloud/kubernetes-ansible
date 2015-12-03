@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 if ANSIBLE_GROUP_VARS['enable_metrics']
-  describe 'addons : Uchiwa |' do
+  describe 'sensu-server : Uchiwa |' do
     describe 'ReplicationController |' do
       describe file('/etc/kubernetes/manifests/uchiwa-rc.yaml') do
         it { should exist }

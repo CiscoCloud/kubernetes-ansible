@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 if ANSIBLE_GROUP_VARS['enable_metrics']
-  describe 'addons : Redis |' do
+  describe 'sensu-server : Redis |' do
     describe 'ReplicationController |' do
       describe file('/etc/kubernetes/manifests/redis-rc.yaml') do
         it { should exist }

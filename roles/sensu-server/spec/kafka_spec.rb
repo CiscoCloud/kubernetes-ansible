@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 if ANSIBLE_GROUP_VARS['enable_metrics']
-  describe 'addons : Kafka |' do
+  describe 'sensu-server : Kafka |' do
     describe 'ReplicationController |' do
       describe file('/etc/kubernetes/manifests/kafka-rc.yaml') do
         it { should exist }

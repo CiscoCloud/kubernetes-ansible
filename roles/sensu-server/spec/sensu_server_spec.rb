@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 if ANSIBLE_GROUP_VARS['enable_metrics']
-  describe 'addons : Sensu Server |' do
+  describe 'sensu-server : Sensu Server |' do
     describe 'ReplicationController |' do
       describe file('/etc/kubernetes/manifests/sensu-server-rc.yaml') do
         it { should exist }
@@ -16,6 +16,10 @@ if ANSIBLE_GROUP_VARS['enable_metrics']
           'name' => 'sensu-server',
           'image' => 'oslobod/sensu',
           'env' => [
+            {
+              'name' => 'LOG_LEVEL',
+              'value' => 'warn'
+            },
             {
               'name' => 'RABBITMQ_HOST',
               'value' => 'rabbitmq-master'

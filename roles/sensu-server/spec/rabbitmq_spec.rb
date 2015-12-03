@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 if ANSIBLE_GROUP_VARS['enable_metrics']
-  describe 'addons : RabbitMQ |' do
+  describe 'sensu-server : RabbitMQ |' do
     describe 'ReplicationController |' do
       describe file('/etc/kubernetes/manifests/rabbitmq-rc.yaml') do
         it { should exist }
