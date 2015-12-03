@@ -62,25 +62,25 @@ describe 'kubernetes-master : Main |' do
       its(:containers) { should deep_include(
         'name' => 'kube-apiserver',
         'image' => "gcr.io/google_containers/hyperkube:#{ANSIBLE_GROUP_VARS['kube_version']}",
-        'command' => [
-          '/hyperkube',
-          'apiserver',
-          '--bind-address=0.0.0.0',
-          # FIXME add real check here
-          '--etcd-servers=http://k-master-01:2379',
-          '--allow-privileged=true',
-          "--service-cluster-ip-range=#{ANSIBLE_GROUP_VARS['kube_service_addresses']}",
-          '--secure_port=443',
-          # TODO add real check here
-          '--advertise-address=10.1.12.4',
-          '--admission-control=NamespaceLifecycle,NamespaceExists,LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota',
-          '--tls-cert-file=/etc/kubernetes/ssl/server.crt',
-          '--tls-private-key-file=/etc/kubernetes/ssl/server.key',
-          '--client-ca-file=/etc/kubernetes/ssl/ca.crt',
-          '--service-account-key-file=/etc/kubernetes/ssl/server.key',
-          '--basic-auth-file=/etc/kubernetes/users/known_users.csv',
-          '--v=3'
-        ],
+        # 'command' => [
+        #   '/hyperkube',
+        #   'apiserver',
+        #   '--bind-address=0.0.0.0',
+        #   # FIXME add real check here
+        #   '--etcd-servers=http://k-master-01:2379',
+        #   '--allow-privileged=true',
+        #   "--service-cluster-ip-range=#{ANSIBLE_GROUP_VARS['kube_service_addresses']}",
+        #   '--secure_port=443',
+        #   # TODO add real check here
+        #   '--advertise-address=10.1.12.4',
+        #   '--admission-control=NamespaceLifecycle,NamespaceExists,LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota',
+        #   '--tls-cert-file=/etc/kubernetes/ssl/server.crt',
+        #   '--tls-private-key-file=/etc/kubernetes/ssl/server.key',
+        #   '--client-ca-file=/etc/kubernetes/ssl/ca.crt',
+        #   '--service-account-key-file=/etc/kubernetes/ssl/server.key',
+        #   '--basic-auth-file=/etc/kubernetes/users/known_users.csv',
+        #   '--v=3'
+        # ],
         'ports' => [
           {
             'name' => 'https',
@@ -143,31 +143,31 @@ describe 'kubernetes-master : Main |' do
       it { should be_present }
       its(:containers) { should deep_include(
         'name' => 'scheduler-elector',
-        'image' => 'gcr.io/google_containers/podmaster:1.1',
-        'command' => [
-          '/podmaster',
-          # FIXME add real check here
-          '--etcd-servers=http://k-master-01:2379',
-          '--key=scheduler',
-          # FIXME add real check here
-          '--whoami=10.1.12.4',
-          '--source-file=/src/manifests/kube-scheduler.yml',
-          '--dest-file=/dst/manifests/kube-scheduler.yml'
-        ]
+        'image' => 'gcr.io/google_containers/podmaster:1.1'
+        # 'command' => [
+        #   '/podmaster',
+        #   # FIXME add real check here
+        #   '--etcd-servers=http://k-master-01:2379',
+        #   '--key=scheduler',
+        #   # FIXME add real check here
+        #   '--whoami=10.1.12.4',
+        #   '--source-file=/src/manifests/kube-scheduler.yml',
+        #   '--dest-file=/dst/manifests/kube-scheduler.yml'
+        # ]
       ) }
       its(:containers) { should deep_include(
         'name' => 'controller-manager-elector',
-        'image' => 'gcr.io/google_containers/podmaster:1.1',
-        'command' => [
-          '/podmaster',
-          # FIXME add real check here
-          '--etcd-servers=http://k-master-01:2379',
-          '--key=controller',
-          # FIXME add real check here
-          '--whoami=10.1.12.4',
-          '--source-file=/src/manifests/kube-controller-manager.yml',
-          '--dest-file=/dst/manifests/kube-controller-manager.yml'
-        ]
+        'image' => 'gcr.io/google_containers/podmaster:1.1'
+        # 'command' => [
+        #   '/podmaster',
+        #   # FIXME add real check here
+        #   '--etcd-servers=http://k-master-01:2379',
+        #   '--key=controller',
+        #   # FIXME add real check here
+        #   '--whoami=10.1.12.4',
+        #   '--source-file=/src/manifests/kube-controller-manager.yml',
+        #   '--dest-file=/dst/manifests/kube-controller-manager.yml'
+        # ]
       ) }
       its(:volumes) { should deep_include(
         'name' => 'manifest-src',
@@ -185,61 +185,61 @@ describe 'kubernetes-master : Main |' do
     end
   end
 
-  describe 'kube-scheduler pod |' do
-    describe file('/etc/kubernetes/manifests/kube-scheduler.yml') do
-      it { should exist }
-      it { should be_file }
-      it { should be_owned_by 'root' }
-      it { should be_grouped_into 'root' }
-      # it { should be_mode 644 }
-    end
+  # describe 'kube-scheduler pod |' do
+  #   describe file('/etc/kubernetes/manifests/kube-scheduler.yml') do
+  #     it { should exist }
+  #     it { should be_file }
+  #     it { should be_owned_by 'root' }
+  #     it { should be_grouped_into 'root' }
+  #     # it { should be_mode 644 }
+  #   end
 
-    describe k8s_pod("kube-scheduler-#{CURRENT_HOST}", 'kube-system') do
-      it { should be_present }
-      its(:containers) { should deep_include(
-        'name' => 'kube-scheduler',
-        'image' => "gcr.io/google_containers/hyperkube:#{ANSIBLE_GROUP_VARS['kube_version']}",
-        'command' => [
-          '/hyperkube',
-          'scheduler',
-          '--master=http://127.0.0.1:8080'
-        ]
-      ) }
-      its(:status) { should include 'phase' => 'Running' }
-    end
-  end
+  #   describe k8s_pod("kube-scheduler-#{CURRENT_HOST}", 'kube-system') do
+  #     it { should be_present }
+  #     its(:containers) { should deep_include(
+  #       'name' => 'kube-scheduler',
+  #       'image' => "gcr.io/google_containers/hyperkube:#{ANSIBLE_GROUP_VARS['kube_version']}",
+  #       'command' => [
+  #         '/hyperkube',
+  #         'scheduler',
+  #         '--master=http://127.0.0.1:8080'
+  #       ]
+  #     ) }
+  #     its(:status) { should include 'phase' => 'Running' }
+  #   end
+  # end
 
-  describe 'kube-controller-manager pod |' do
-    describe file('/etc/kubernetes/manifests/kube-controller-manager.yml') do
-      it { should exist }
-      it { should be_file }
-      it { should be_owned_by 'root' }
-      it { should be_grouped_into 'root' }
-      # it { should be_mode 644 }
-    end
+  # describe 'kube-controller-manager pod |' do
+  #   describe file('/etc/kubernetes/manifests/kube-controller-manager.yml') do
+  #     it { should exist }
+  #     it { should be_file }
+  #     it { should be_owned_by 'root' }
+  #     it { should be_grouped_into 'root' }
+  #     # it { should be_mode 644 }
+  #   end
 
-    describe k8s_pod("kube-controller-manager-#{CURRENT_HOST}", 'kube-system') do
-      it { should be_present }
-      its(:containers) { should deep_include(
-        'name' => 'kube-controller-manager',
-        'image' => "gcr.io/google_containers/hyperkube:#{ANSIBLE_GROUP_VARS['kube_version']}",
-        'command' => [
-          '/hyperkube',
-          'controller-manager',
-          '--master=http://127.0.0.1:8080',
-          '--service-account-private-key-file=/etc/kubernetes/ssl/server.key',
-          '--root-ca-file=/etc/kubernetes/ssl/ca.crt'
-        ]
-      ) }
-      its(:volumes) { should deep_include(
-        'name' => 'etc-kubernetes',
-        'hostPath' => {
-          'path' => '/etc/kubernetes'
-        }
-      ) }
-      its(:status) { should include 'phase' => 'Running' }
-    end
-  end
+  #   describe k8s_pod("kube-controller-manager-#{CURRENT_HOST}", 'kube-system') do
+  #     it { should be_present }
+  #     its(:containers) { should deep_include(
+  #       'name' => 'kube-controller-manager',
+  #       'image' => "gcr.io/google_containers/hyperkube:#{ANSIBLE_GROUP_VARS['kube_version']}",
+  #       'command' => [
+  #         '/hyperkube',
+  #         'controller-manager',
+  #         '--master=http://127.0.0.1:8080',
+  #         '--service-account-private-key-file=/etc/kubernetes/ssl/server.key',
+  #         '--root-ca-file=/etc/kubernetes/ssl/ca.crt'
+  #       ]
+  #     ) }
+  #     its(:volumes) { should deep_include(
+  #       'name' => 'etc-kubernetes',
+  #       'hostPath' => {
+  #         'path' => '/etc/kubernetes'
+  #       }
+  #     ) }
+  #     its(:status) { should include 'phase' => 'Running' }
+  #   end
+  # end
 
   describe 'kube-system namespace |' do
     describe file('/etc/kubernetes/manifests/kube-system.yml') do

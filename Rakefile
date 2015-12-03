@@ -13,6 +13,8 @@ class ServerspecTask < RSpec::Core::RakeTask
 
   def run_task(verbose)
     hosts.each_pair do |hostname, vars|
+      puts "Running tests on #{hostname} [#{vars['ansible_ssh_host']}]"
+
       success = system("env TARGET_HOST=#{vars['ansible_ssh_host']} TARGET_HOST_NAME=#{hostname} TARGET_PORT=#{vars['ansible_ssh_port']} TARGET_USER=#{vars['ansible_ssh_user']} #{spec_command}")
       raise "Failed!" if not success
     end

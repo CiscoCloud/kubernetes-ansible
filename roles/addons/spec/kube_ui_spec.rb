@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-if ANSIBLE_GROUP_VARS['enable_ui']
+if ANSIBLE_GROUP_VARS['enable_ui'] and INVENTORY['master']['hosts'].first == CURRENT_HOST
   describe 'addons : Kube-UI |' do
     describe 'ReplicationController |' do
       describe file('/etc/kubernetes/manifests/kube-ui-rc.yaml') do
