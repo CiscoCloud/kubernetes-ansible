@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-describe 'kubernates-master : Main |' do
+describe 'kubernetes-node : Main |' do
   describe 'k8s binaries |' do
     describe file('/usr/bin/kubelet') do
       it { should exist }
       it { should be_file }
-      it { should be_mode 753 }
+      it { should be_mode 755 }
     end
 
     describe file('/usr/bin/kubectl') do

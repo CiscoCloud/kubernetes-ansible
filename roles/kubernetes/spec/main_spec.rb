@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'kubernates : Main |' do
+describe 'kubernetes : Main |' do
   describe file('/etc/kubernetes') do
     it { should exist }
     it { should be_directory }

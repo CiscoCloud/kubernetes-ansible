@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'kubernates : Secrets |' do
+describe 'kubernetes : Secrets |' do
   describe group('kube') do
     it { should exist }
   end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'kubernates-master : Main |' do
+describe 'kubernetes-master : Main |' do
   describe 'k8s binaries |' do
     describe file('/usr/bin/kubelet') do
       it { should exist }

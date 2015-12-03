@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'kubernates-master : Secrets |' do
+describe 'kubernetes-master : Secrets |' do
   describe 'ca.crt |' do
     describe file('/etc/kubernetes/ssl/ca.crt') do
       it { should exist }
