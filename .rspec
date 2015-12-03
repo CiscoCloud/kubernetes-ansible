@@ -1,0 +1,2 @@
+--color
+--format <%= ENV['FORMAT'] || 'documentation' %>

@@ -34,7 +34,7 @@ All of the addons depend on the DNS addon for Service Discovery.
 - Install pip package (CentOS/RedHat)
 
         # yum install python-devel python-pip
-        
+
 - Install the OpenStack command-line clients
 
 When following the instructions in this section, replace PROJECT with the lowercase name of the client to install, such as nova. Repeat for each client. The following values are valid:
@@ -82,7 +82,7 @@ Additional [OpenStack](http://docs.openstack.org/) CLI information [here](http:/
         cp terraform/terraform.tfvars terraform.tfvars
 
         # edit the terraform.tfvars file by providing the following
-        
+
         - auth_url (found within *openrc.sh)
         - tenant_id (found within *openrc.sh)
         - tenant_name (found within *openrc.sh)
@@ -161,6 +161,37 @@ The following command will append the hosts to your `/etc/hosts` file.
 
 ```
 ./plugins/inventory/terraform.py --hostfile >> /etc/hosts
+```
+
+
+### Validate ansible playbooks
+
+Install [Serverspec](http://serverspec.org) environment :
+
+```
+bundle install --path vendor/bundle
+```
+
+Run Serverspec tests for different plays :
+
+```
+bundle exec rake check:play:All
+bundle exec rake check:play:Master
+bundle exec rake check:play:Node
+```
+
+Show all available Rake-tasks :
+
+```
+bundle exec rake -T
+```
+
+To use different [RSpec output formats](http://www.rubydoc.info/gems/rspec-core/RSpec/Core/Formatters) (`documentation` is default one) :
+
+```
+FORMAT=documentation bundle exec rake check:play:All
+FORMAT=json bundle exec rake check:play:All
+FORMAT=progress bundle exec rake check:play:All
 ```
 
 
