@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-if ANSIBLE_GROUP_VARS['enable_metrics']
+if ANSIBLE_GROUP_VARS['enable_metrics'] and INVENTORY['master']['hosts'].first == CURRENT_HOST
   describe 'sensu-server : Sensu API |' do
     describe 'ReplicationController |' do
       describe file('/etc/kubernetes/manifests/sensu-api-rc.yaml') do
