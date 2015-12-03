@@ -6,14 +6,33 @@ describe 'kubernates : Main |' do
     it { should be_directory }
   end
 
-  # describe file('/usr/libexec/kubernetes') do
-  #   it { should exist }
-  #   it { should be_directory }
-  # end
+  describe file('/srv/kubernetes') do
+    it { should exist }
+    it { should be_directory }
+  end
 
   describe file('/etc/kubernetes/manifests') do
     it { should exist }
     it { should be_directory }
+  end
+
+  describe file('/srv/kubernetes/manifests') do
+    it { should exist }
+    it { should be_directory }
+  end
+
+  describe file('/etc/kubernetes/ssl') do
+    it { should exist }
+    it { should be_directory }
+  end
+
+  describe file('/etc/kubernetes/users') do
+    it { should exist }
+    it { should be_directory }
+  end
+
+  describe docker_image("gcr.io/google_containers/hyperkube:#{ANSIBLE_GROUP_VARS['kube_version']}") do
+    it { should exist }
   end
 
   # describe file('/etc/kubernetes/config') do

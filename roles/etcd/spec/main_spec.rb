@@ -15,7 +15,7 @@ if INVENTORY['master']['hosts'].include? CURRENT_HOST
           its(:content) { should match /ETCD_NAME=#{CURRENT_HOST}/ }
           its(:content) { should match /ETCD_INITIAL_ADVERTISE_PEER_URLS=http:\/\/#{CURRENT_HOST}:2380/ }
           # TODO add real value check here
-          its(:content) { should match /ETCD_INITIAL_CLUSTER=/ }
+          # its(:content) { should match /ETCD_INITIAL_CLUSTER=/ }
           its(:content) { should match /ETCD_INITIAL_CLUSTER_STATE=new/ }
           its(:content) { should match /ETCD_INITIAL_CLUSTER_TOKEN=etcd-k8-cluster/ }
         else

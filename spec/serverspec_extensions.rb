@@ -14,5 +14,6 @@ require 'lib/serverspec_extensions/type/k8s_base'
 require 'lib/serverspec_extensions/type/k8s_resource'
 
 require 'lib/serverspec_extensions/type/k8s_namespace'
+require 'lib/serverspec_extensions/type/k8s_pod'
 require 'lib/serverspec_extensions/type/k8s_replication_controller'
 require 'lib/serverspec_extensions/type/k8s_service'

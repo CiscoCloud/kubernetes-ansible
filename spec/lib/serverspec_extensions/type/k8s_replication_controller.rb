@@ -7,8 +7,6 @@ module Serverspec
         @k8s_type = 'replicationController'
 
         super name, namespace
-
-        puts @k8s_resource
       end
 
       def containers
