@@ -164,7 +164,7 @@ The following command will append the hosts to your `/etc/hosts` file.
 ```
 
 
-### Validate ansible playbooks
+### Validate Ansible playbooks
 
 Install [Serverspec](http://serverspec.org) environment :
 
@@ -172,12 +172,18 @@ Install [Serverspec](http://serverspec.org) environment :
 bundle install --path vendor/bundle
 ```
 
-Run Serverspec tests for different plays :
+Run Serverspec test for all nodes and specs in parallel (using 8 threads), print *short* summary in JSON format and provide `0` exit code for succeed validation of Ansible playbooks :
 
 ```
-bundle exec rake check:play:All
-bundle exec rake check:play:Master
-bundle exec rake check:play:Node
+bundle exec rake -m -j 8
+```
+
+Run Serverspec tests for different plays in parallel :
+
+```
+bundle exec rake spec:play:All -m -j 8
+bundle exec rake spec:play:Master -m -j 8
+bundle exec rake spec:play:Node -m -j 8
 ```
 
 Show all available Rake-tasks :
@@ -186,12 +192,90 @@ Show all available Rake-tasks :
 bundle exec rake -T
 ```
 
-To use different [RSpec output formats](http://www.rubydoc.info/gems/rspec-core/RSpec/Core/Formatters) (`documentation` is default one) :
+To use different [RSpec output formats](http://www.rubydoc.info/gems/rspec-core/RSpec/Core/Formatters) (`json` is default one) :
 
 ```
-FORMAT=documentation bundle exec rake check:play:All
-FORMAT=json bundle exec rake check:play:All
-FORMAT=progress bundle exec rake check:play:All
+FORMAT=documentation bundle exec rake spec:play:All -m -j 8
+FORMAT=json bundle exec rake spec:play:All -m -j 8
+FORMAT=progress bundle exec rake spec:play:All -m -j 8
+```
+
+##### JSON output format
+
+When using `FORMAT=json` (default) the output will contain tests *summary* only :
+
+```json
+{
+  "succeed": true,
+  "example_count": 490,
+  "failure_count": 0
+}
+```
+
+*Detailed* results could be found inside `serverspec_results.json` file at project root directory :
+
+```json
+[
+  {
+    "name": "docker::k-master-01",
+    "exit_code": 0,
+    "output": {
+      "version": "3.4.0",
+      "examples": [
+        {
+          "description": "should be installed",
+          "full_description": "docker : Main | Package \"docker\" should be installed",
+          "status": "passed",
+          "file_path": "./roles/docker/spec/main_spec.rb",
+          "line_number": 5,
+          "run_time": 3.202775,
+          "pending_message": null
+        },
+        {
+          "description": "should be enabled",
+          "full_description": "docker : Main | Service \"docker\" should be enabled",
+          "status": "passed",
+          "file_path": "./roles/docker/spec/main_spec.rb",
+          "line_number": 9,
+          "run_time": 0.443939,
+          "pending_message": null
+        }
+      ],
+      "summary": {
+        "duration": 4.07774,
+        "example_count": 3,
+        "failure_count": 0,
+        "pending_count": 0
+      },
+      "summary_line": "3 examples, 0 failures"
+    }
+  },
+  {
+    "name": "flannel::k-master-01",
+    "exit_code": 0,
+    "output": {
+      "version": "3.4.0",
+      "examples": [
+        {
+          "description": "should be installed",
+          "full_description": "flannel : Main |  Service | Package \"flannel\" should be installed",
+          "status": "passed",
+          "file_path": "./roles/flannel/spec/main_spec.rb",
+          "line_number": 6,
+          "run_time": 3.253822,
+          "pending_message": null
+        }
+      ],
+      "summary": {
+        "duration": 6.399068,
+        "example_count": 10,
+        "failure_count": 0,
+        "pending_count": 0
+      },
+      "summary_line": "10 examples, 0 failures"
+    }
+  }
+]
 ```
 
 
