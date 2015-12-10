@@ -1,2 +1,2 @@
 --color
---format <%= ENV['FORMAT'] || 'documentation' %>
+--format <%= ENV['FORMAT'] || 'json' %>

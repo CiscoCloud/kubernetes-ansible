@@ -5,4 +5,5 @@
 /*.tfvars
 **/*.syncdir
 /.bundle
+/serverspec_results.json
 /vendor
