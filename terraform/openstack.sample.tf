@@ -12,6 +12,7 @@ variable net_id {}
 variable master_count {}
 variable node_count {}
 variable glusterfs_volume_size {}
+variable ssh_user {}
 
 provider "openstack" {
   auth_url = "${ var.auth_url }"
@@ -42,4 +43,5 @@ module "k8s-hosts" {
   node_count = "${ var.node_count }"
   security_groups = "${ module.k8s-secgroup.cluster_name }"
   glusterfs_volume_size = "${ var.glusterfs_volume_size }"
+  ssh_user = "${ var.ssh_user }"
 }
