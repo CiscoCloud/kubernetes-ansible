@@ -13,6 +13,8 @@ variable external_net_id {}
 variable subnet_cidr {}
 variable master_count {}
 variable node_count {}
+variable ssh_user {}
+variable short_name {}
 
 provider "openstack" {
   auth_url = "${ var.auth_url }"
@@ -44,4 +46,6 @@ module "k8s-hosts-floating" {
   floating_pool = "${ var.floating_pool }"
   external_net_id = "${ var.external_net_id }"
   subnet_cidr = "${ var.subnet_cidr }"
+  ssh_user = "${ var.ssh_user }"
+  short_name = "${ var.short_name }"
 }
