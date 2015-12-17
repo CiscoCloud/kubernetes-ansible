@@ -45,5 +45,5 @@ module "k8s-hosts-floating" {
   floating_pool = "${ var.floating_pool }"
   external_net_id = "${ var.external_net_id }"
   subnet_cidr = "${ var.subnet_cidr }"
-  ssh_user = "${ var.ssh_user }
+  ssh_user = "${ var.ssh_user }"
 }
