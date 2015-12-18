@@ -17,6 +17,8 @@ master_count = "3"
 node_count = "3"
 datacenter = ""
 glusterfs_volume_size = ""
+ssh_user = "centos"
+short_name = "k8s"
 
 # If using openstack-floating.sample.tf, set the two variables below
 
