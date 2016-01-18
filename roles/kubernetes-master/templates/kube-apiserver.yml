@@ -25,7 +25,7 @@ spec:
     - --service-account-key-file={{ kube_cert_dir }}/server.key
     - --basic-auth-file={{ kube_users_dir }}/known_users.csv
     - --runtime-config=extensions/v1beta1/daemonsets=true
-    - --v=3
+    - --v={{kube_log_level}}
     ports:
     - containerPort: 443
       hostPort: 443
