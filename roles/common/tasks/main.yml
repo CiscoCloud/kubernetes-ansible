@@ -39,28 +39,12 @@
   tags:
     - common
 
-# add hosts to /etc/hosts
-- name: populate inventory into hosts file
+- name: configure hosts file
   sudo: yes
-  lineinfile:
+  template:
+    src: hosts.j2
     dest: /etc/hosts
-    regexp: "^{{ hostvars[item].ansible_default_ipv4.address }} {{ item }}$"
-    line: "{{ hostvars[item].ansible_default_ipv4.address }} {{ item }}"
-    state: present
-  when: hostvars[item].ansible_default_ipv4.address is defined
-  with_items: groups['all']
-  tags:
-    - common
-
-- name: clean hosts file
-  sudo: yes
-  lineinfile:
-    dest: /etc/hosts
-    regexp: "{{ item }}"
-    state: absent
-  with_items:
-    - '^127\.0\.0\.1(\s+){{ inventory_hostname }}.*'
-    - '^::1(\s+){{ inventory_hostname }}.*'
+    mode: 0644
   tags:
     - common
 
