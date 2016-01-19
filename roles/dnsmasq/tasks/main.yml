@@ -25,7 +25,7 @@
   template:
     src: 01-kube-dns.conf.j2
     dest: /etc/dnsmasq.d/01-kube-dns.conf
-    mode: 755
+    mode: 0755
   notify:
     - restart dnsmasq
   when: inventory_hostname in groups['master']
@@ -47,7 +47,7 @@
   template:
     src: resolv.conf.j2
     dest: /etc/resolv.conf
-    mode: 644
+    mode: 0644
   tags:
     - dnsmasq
 
