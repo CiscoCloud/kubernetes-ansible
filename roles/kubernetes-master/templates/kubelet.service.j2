@@ -12,7 +12,8 @@ ExecStart=/usr/bin/kubelet \
   --allow-privileged=true \
   --cluster-dns={{ dns_server }} \
   --cluster-domain={{ dns_domain }} \
-  --config={{ kube_manifest_dir }}
+  --config={{ kube_manifest_dir }} \
+  --v={{kube_log_level}}
 Restart=always
 RestartSec=10
 

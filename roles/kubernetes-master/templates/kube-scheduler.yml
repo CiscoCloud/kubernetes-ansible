@@ -12,6 +12,7 @@ spec:
     - /hyperkube
     - scheduler
     - --master=http://127.0.0.1:8080
+    - --v={{kube_log_level}}
     livenessProbe:
       httpGet:
         host: 127.0.0.1

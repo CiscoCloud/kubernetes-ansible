@@ -12,9 +12,10 @@ spec:
     - /hyperkube
     - proxy
     #- --master={% for node in groups['master'] %}https://{{ node }}{% if not loop.last %},{% endif %}{% endfor %}
-    
+
     - --master=https://{{ groups['master'][0] }}:{{ kube_master_port }}
     - --kubeconfig={{ kube_config_dir }}/node.kubeconfig
+    - --v={{kube_log_level}}
     securityContext:
       privileged: true
     volumeMounts:

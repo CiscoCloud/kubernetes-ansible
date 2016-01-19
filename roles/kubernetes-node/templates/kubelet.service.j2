@@ -15,7 +15,7 @@ ExecStart=/usr/bin/kubelet \
   --kubeconfig={{ kube_config_dir }}/node.kubeconfig \
   --tls-cert-file={{ kube_cert_dir }}/kubelet.crt \
   --tls-private-key-file={{ kube_cert_dir }}/kubelet.key \
-  --v=2
+  --v={{kube_log_level}}
 Restart=always
 RestartSec=10
 
