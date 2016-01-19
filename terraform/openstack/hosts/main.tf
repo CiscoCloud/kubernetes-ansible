@@ -41,7 +41,7 @@ resource "openstack_blockstorage_volume_v1" "k8s-glusterfs" {
 }
 
 resource "openstack_compute_instance_v2" "master" {
-  name = "${ var.short_name}-master-${format("%02d", count.index+1) }"
+  name = "${ var.short_name}-master-${format("%02d", count.index+1) }.${ var.host_domain }"
   key_pair = "${ var.keypair_name }"
   image_name = "${ var.image_name }"
   flavor_name = "${ var.master_flavor }"
@@ -61,7 +61,7 @@ resource "openstack_compute_instance_v2" "master" {
 }
 
 resource "openstack_compute_instance_v2" "node" {
-  name = "${ var.short_name}-node-${format("%02d", count.index+1) }"
+  name = "${ var.short_name}-node-${format("%02d", count.index+1) }.${ var.host_domain }"
   key_pair = "${ var.keypair_name }"
   image_name = "${ var.image_name }"
   flavor_name = "${ var.node_flavor }"
