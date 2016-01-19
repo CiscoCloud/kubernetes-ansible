@@ -24,7 +24,7 @@ short_name = "k8s"
 
 floating_pool = ""
 external_net_id = ""
-subnet_cidr = "10.10.10.0/24"
+subnet_cidr = "10.0.0.0/24"
 
 # If using openstack.sample.tf, set the following
 
