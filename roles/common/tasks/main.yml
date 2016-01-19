@@ -39,6 +39,15 @@
   tags:
     - common
 
+# Set hostname explicitly as a precaution in case of any
+# cloud-init failures.
+- name: set hostname
+  sudo: yes
+  hostname:
+    name: "{{ inventory_hostname }}"
+  tags:
+    - common
+
 - name: configure hosts file
   sudo: yes
   template:
