@@ -19,6 +19,14 @@ kube_users:
 # Kubernetes cluster name, also will be used as DNS domain
 cluster_name: cluster.local
 
+# Enable to leverage some unique features of a specific cloud provider.
+enable_cloud_provider: false
+
+# Only OpenStack provider is currently supported.
+cloud_provider: openstack
+
+cloud_provider_config: /etc/kubernetes/cloud-config
+
 # Kubernetes internal network for services, unused block of space.
 kube_service_addresses: 10.254.0.0/16
 
