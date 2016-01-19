@@ -11,7 +11,6 @@ variable external_net_id { }
 variable subnet_cidr { default = "10.10.10.0/24" }
 variable ip_version { default = "4" }
 variable short_name { default = "k8s" }
-variable long_name { default = "kubernertes" }
 variable host_domain { default = "novalocal" }
 variable ssh_user { default = "centos" }
 

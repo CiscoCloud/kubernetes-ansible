@@ -9,7 +9,6 @@ variable node_count { }
 variable node_flavor { }
 variable security_groups { }
 variable short_name { default = "k8s" }
-variable long_name { default = "kubernetes" }
 variable host_domain { default = "novalocal" }
 variable ssh_user { default = "centos" }
 
