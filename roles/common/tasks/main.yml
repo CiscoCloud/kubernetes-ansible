@@ -48,11 +48,7 @@
   tags:
     - common
 
-- name: upgrade all packages
-  sudo: yes
-  yum: name=* state=latest
-  tags:
-    - common
+- include: upgrade-packages.yml
 
 - name: enable EPEL repo
   sudo: yes
@@ -65,8 +61,8 @@
 - name: install docker-common-candidate repo
   sudo: yes
   copy:
-    src=virt7-docker-common-candidate.repo
-    dest=/etc/yum.repos.d/virt7-docker-common-candidate.repo
+    src: virt7-docker-common-candidate.repo
+    dest: /etc/yum.repos.d/virt7-docker-common-candidate.repo
   when: package_channel == "testing"
   tags:
     - common
