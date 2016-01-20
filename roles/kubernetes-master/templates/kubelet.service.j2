@@ -8,12 +8,16 @@ Requires=docker.service
 ExecStart=/usr/bin/kubelet \
   --api-servers=http://localhost:8080 \
   --register-node=false \
-  --hostname-override={{ ansible_hostname }} \
+  --hostname-override={{ inventory_hostname }} \
   --allow-privileged=true \
   --cluster-dns={{ dns_server }} \
   --cluster-domain={{ dns_domain }} \
-  --config={{ kube_manifest_dir }} \
-  --v={{kube_log_level}}
+  --v={{ kube_log_level }} \
+  --config={{ kube_manifest_dir }} {% if enable_cloud_provider %}\
+  --cloud-provider={{ cloud_provider }} \
+  --cloud-config={{ cloud_provider_config }}
+{% endif %}
+
 Restart=always
 RestartSec=10
 

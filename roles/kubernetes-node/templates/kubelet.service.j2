@@ -9,13 +9,17 @@ ExecStart=/usr/bin/kubelet \
   --api-servers={% for node in groups['master'] %}https://{{ node }}{% if not loop.last %},{% endif %}{% endfor %} \
   --allow-privileged=true \
   --config={{ kube_manifest_dir }} \
-  --hostname-override={{ ansible_hostname }} \
+  --hostname-override={{ inventory_hostname }} \
   --cluster-dns={{ dns_server }} \
   --cluster-domain={{ dns_domain }} \
   --kubeconfig={{ kube_config_dir }}/node.kubeconfig \
   --tls-cert-file={{ kube_cert_dir }}/kubelet.crt \
   --tls-private-key-file={{ kube_cert_dir }}/kubelet.key \
-  --v={{kube_log_level}}
+  --v={{ kube_log_level }} {% if enable_cloud_provider %}\
+  --cloud-provider={{ cloud_provider }} \
+  --cloud-config={{ cloud_provider_config }}
+{% endif %}
+
 Restart=always
 RestartSec=10
 

@@ -14,6 +14,7 @@ variable node_count {}
 variable glusterfs_volume_size {}
 variable ssh_user {}
 variable short_name {}
+variable host_domain {}
 
 provider "openstack" {
   auth_url = "${ var.auth_url }"
@@ -46,4 +47,5 @@ module "k8s-hosts" {
   glusterfs_volume_size = "${ var.glusterfs_volume_size }"
   ssh_user = "${ var.ssh_user }"
   short_name = "${ var.short_name }"
+  host_domain = "${ var.host_domain }"
 }
