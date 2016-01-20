@@ -25,10 +25,10 @@ All of the addons depend on the DNS addon for Service Discovery.
 
 ### Provision Openstack environment
 
-- Install [terraform](http://www.terraform.io/downloads.html)
+- Install [terraform](https://www.terraform.io/downloads.html)
 
-        # change 0.6.3 to the desired version
-        wget -q -O terraform.zip https://dl.bintray.com/mitchellh/terraform/terraform_0.6.3_linux_amd64.zip
+        # change 0.6.9 to the desired version
+        wget -q -O terraform.zip https://dl.bintray.com/mitchellh/terraform/terraform_0.6.9_linux_amd64.zip
         unzip terraform.zip -d /usr/local/bin
 
 - Install pip package (CentOS/RedHat)
@@ -96,6 +96,8 @@ Additional [OpenStack](http://docs.openstack.org/) CLI information [here](http:/
 
         *nova - example if you using NOVA Compute API and extensions
         *openrc.sh - Openstack Project Web Interface
+
+**Note:** You must use image with pre-installed `cloud-init`.
 
 - Provision Environment
 
