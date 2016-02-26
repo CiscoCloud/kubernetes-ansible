@@ -11,3 +11,12 @@ server=8.8.4.4
 
 # Forward k8s domain to kube-dns
 server=/{{ dns_domain }}/{{ dns_server }}
+
+{% if dns_extra is defined and dns_extra is iterable %}
+  {%- for key, val in dns_extra.iteritems() %}
+    {%- for nameserver in val %}
+
+server=/{{ key }}/{{ nameserver }}
+    {%- endfor %}
+  {%- endfor %}
+{% endif %}

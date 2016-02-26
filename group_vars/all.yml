@@ -59,6 +59,13 @@ dns_setup: true
 # Number of replicas of DNS instances started on kubernetes
 dns_replicas: 1
 
+# specify extra upstream dns servers for specific domains
+#dns_extra:
+#  cisco.com:
+#    - 72.163.5.201
+#    - 64.102.255.44
+#    - 173.37.146.41
+
 # Set to 'false' to disable default Kubernetes UI setup
 enable_ui: true
 
