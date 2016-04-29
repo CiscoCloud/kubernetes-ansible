@@ -7,7 +7,8 @@ Requires=docker.service
 [Service]
 ExecStart=/usr/bin/kubelet \
   --api-servers=http://localhost:8080 \
-  --register-node=false \
+  --register-node=true \
+  --register-schedulable=false \
   --hostname-override={{ inventory_hostname }} \
   --allow-privileged=true \
   --cluster-dns={{ dns_server }} \
