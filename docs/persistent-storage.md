@@ -47,6 +47,7 @@ their pods:
 vi pvc001.yml
 
 apiVersion: v1
+kind: PersistentVolumeClaim 
 metadata:
   name: myclaim-1
 spec:
