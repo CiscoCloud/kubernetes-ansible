@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kube-consul
+  namespace: kube-system
+  labels:
+    k8s-app: kube-consul
+    kubernetes.io/cluster-service: "true"
+    kubernetes.io/name: "KubeConsul"
+spec:
+  selector:
+    k8s-app: kube-consul
+  ports:
+  - name: dns
+    port: 53
+    protocol: UDP
+  - name: dns-tcp
+    port: 53
+    protocol: TCP
+  - name: cdns-tcp
+    port: 8600
+    protocol: TCP
+  - name: cdns-udp
+    port: 8600
+    protocol: UDP
+  - name: serflan-tcp
+    port: 8301
+    protocol: TCP
+  - name: serflan-udp
+    port: 8301
+    protocol: UDP
+  - name: rpc-tcp
+    port: 8400
+    protocol: TCP
+  - name: serfwan-tcp
+    port: 8302
+    protocol: TCP
+  - name: serfwan-udp
+    port: 8302
+    protocol: UDP
+  - name: server-tcp
+    port: 8300
+    protocol: TCP
+  - name: http-api
+    port: 8500
+    protocol: TCP
